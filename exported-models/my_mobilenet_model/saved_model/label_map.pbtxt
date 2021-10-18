@@ -1,0 +1,34 @@
+item {
+    id: 1
+    name: 'stop'
+}
+
+item {
+    id: 2
+    name: 'limit_80'
+}
+
+item {
+    id: 3
+    name: 'passage_pieton'
+}
+
+item {
+    id: 4
+    name: 'limit_110'
+}
+
+item {
+    id: 5
+    name: 'zone_30'
+}
+
+item {
+    id: 6
+    name: 'limit_50'
+}
+
+item {
+    id: 7
+    name: 'fin_zone_30'
+}
