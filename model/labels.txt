@@ -1,0 +1,7 @@
+stop
+limit_80
+passage_pieton
+limit_110
+zone_30
+limit_50
+fin_zone_30
