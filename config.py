@@ -15,3 +15,7 @@ PROXIMITY_RATE = 0.5
 #linux : libedgetpu.so.1
 
 TPU_LIB = "libedgetpu.1.dylib"
+
+#Adresse du serveur de vidéo
+SERVER_IP = '192.168.200.27'
+SERVER_PORT = 8000

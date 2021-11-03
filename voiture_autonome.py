@@ -5,6 +5,9 @@ import time
 import config
 import cv2
 import numpy as np
+import socket
+import struct
+import pickle
 
 from detected_objects import DetectedObject
 
@@ -12,13 +15,23 @@ logging.basicConfig(level=logging.DEBUG)
 
 class VoitureAutonome :
 
+    test="salut"
+
     def __init__(self, show_video: bool):
         logging.info("VoitureAutonome instanciée !")
         self.__SHOW_VIDEO = show_video
 
+    def initVideoServer(self):
+        server_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        socket_address = (config.SERVER_IP,config.SERVER_PORT)
+        server_socket.bind(socket_address)
+        logging.debug("Socket créée sur %s:%i.", config.SERVER_IP,config.SERVER_PORT)
+        server_socket.listen(5)
+        logging.info("Attente de la connexion du client...")
+        self.client_socket,addr = server_socket.accept()
+
     def initObjectDetection(self):
         startTime = time.time()
-        print(self)
         self.interpreter = tflite.Interpreter(model_path=config.PATH_TO_MODEL, experimental_delegates=[tflite.load_delegate(config.TPU_LIB)])
         with open(config.PATH_TO_LABELS, 'r') as f:
             self.labels = [line.strip() for line in f.readlines()]
@@ -59,35 +72,50 @@ class VoitureAutonome :
                         labelYmin = max(ymin, labelSize[1] + 10)
                         cv2.rectangle(frame, (xmin, labelYmin-labelSize[1]-10), (xmin+labelSize[0], labelYmin+baseLine-10), (255, 255, 255), cv2.FILLED)
                         cv2.putText(frame, label, (xmin, labelYmin-7), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2)
-        print("Objets détectés :")
-        for i in range(len(detectedObjects)):
-            print("Nom : ", detectedObjects[i].object)
-            print("Proche : ",detectedObjects[i].isCloseBy)
-        print("----------")
+        if (len(detectedObjects)>0):
+            print("Objets détectés :")
+            for i in range(len(detectedObjects)):
+                print("Nom : ", detectedObjects[i].object)
+                print("Proche : ",detectedObjects[i].isCloseBy)
+            print("----------")
         return frame
+
+    def invokeModelOnFrame(self, frame):
+        frameRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        frameResized = cv2.resize(frameRGB, (self.inputDetails[0]['shape'][2], self.inputDetails[0]['shape'][1]))
+        inputData = np.expand_dims(frameResized, axis=0)
+
+        self.interpreter.set_tensor(self.inputDetails[0]['index'], inputData)
+
+        self.interpreter.invoke()
+
+        boxes = self.interpreter.get_tensor(self.outputDetails[0]['index'])[0]
+        classes = self.interpreter.get_tensor(self.outputDetails[1]['index'])[0]
+        scores = self.interpreter.get_tensor(self.outputDetails[2]['index'])[0]
+        return (boxes, classes, scores)
+
 
 
     def drive(self):
+        if self.__SHOW_VIDEO:
+            self.initVideoServer()
         self.initObjectDetection()
         while self.videoStream.isOpened():
             ret, frame = self.videoStream.read()
-            frameRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            frameResized = cv2.resize(frameRGB, (self.inputDetails[0]['shape'][2], self.inputDetails[0]['shape'][1]))
-            inputData = np.expand_dims(frameResized, axis=0)
-
-            self.interpreter.set_tensor(self.inputDetails[0]['index'], inputData)
-
-            self.interpreter.invoke()
-
-            boxes = self.interpreter.get_tensor(self.outputDetails[0]['index'])[0]
-            classes = self.interpreter.get_tensor(self.outputDetails[1]['index'])[0]
-            scores = self.interpreter.get_tensor(self.outputDetails[2]['index'])[0]
+            
+            boxes, classes, scores = self.invokeModelOnFrame(frame)
 
             frame = self.processObjectDetectionOnFrame(frame, boxes, classes, scores)
 
 
             if self.__SHOW_VIDEO:
+                toSend = cv2.resize(frame, (0,0), fx=0.35, fy=0.35) 
+                a = pickle.dumps(toSend)
+                message = struct.pack("Q", len(a))+a
+                self.client_socket.sendall(message)
+
+            """ if self.__SHOW_VIDEO:
                 cv2.imshow("Détection d'objets",frame)
 
                 if cv2.waitKey(1) == ord('q'):
-                    break
+                    break """
