@@ -11,7 +11,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-#include "auxiliarFunctions.h"
+#include "../auxiliarFunctions.h"
 
 #define ERROR               -1
 #define REMOTE_PORT         3000

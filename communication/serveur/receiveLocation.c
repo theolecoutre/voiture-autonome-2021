@@ -1,8 +1,5 @@
 #include "receiveLocation.h"
 
-
-
-
 int main ()
 {
     int sock;
