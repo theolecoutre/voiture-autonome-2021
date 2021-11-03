@@ -19,6 +19,10 @@ void sendStopVoiture()
     
 }
 
+void sendStartVoiture()
+{
+    
+}
 
 int main ()
 {
@@ -58,6 +62,10 @@ int main ()
 
             case 2:
                 sendStopVoiture();
+                break;
+
+            case 3:
+                sendStartVoiture();
                 break;
 
             default:
