@@ -1,0 +1,6 @@
+#ifndef AUXILIAR_FUNCTIONS_H
+#define AUXILIAR_FUNCTIONS_H
+
+
+
+#endif
