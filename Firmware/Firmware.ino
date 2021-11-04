@@ -29,7 +29,7 @@ void loop() {
 
   LogVariables();
 
-  setM1AVoltage(3);
+  setM1AVoltage(-3);
   setM2AVoltage(3);
 }
 
