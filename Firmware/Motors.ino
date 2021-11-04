@@ -12,13 +12,13 @@ void InitMotors()
 {
  //Moteur 1
  pinMode(M1_BI1, OUTPUT);
- pinMode(M1_BI1, OUTPUT);
- pinMode(M1_PWM; OUTPUT);
+ pinMode(M1_BI2, OUTPUT);
+ pinMode(M1_PWM, OUTPUT);
  
  //Moteur 2
  pinMode(M2_BI1, OUTPUT);
- pinMode(M2_BI1, OUTPUT);
- pinMode(M2_PWM; OUTPUT);
+ pinMode(M2_BI2, OUTPUT);
+ pinMode(M2_PWM, OUTPUT);
 }
 
 // fonction permettant de gerer l'alimentation moteur (sens et amplitude)
@@ -41,7 +41,7 @@ void setM1AVoltage(float valeur)
 void setM2AVoltage(float valeur)
 {
   valeur = valeur * VOLT_TO_PWM;
-  if(valeur<0)
+  if(valeur>0)
   {
     digitalWrite(M2_BI1,1);
     digitalWrite(M2_BI2,0);
