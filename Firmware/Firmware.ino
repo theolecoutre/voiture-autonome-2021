@@ -29,7 +29,8 @@ void loop() {
 
   LogVariables();
 
-  setMotorAVoltage(3);
+  setM1AVoltage(3);
+  setM2AVoltage(3);
 }
 
 void UpdateInputSignals(){
