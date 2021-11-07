@@ -931,7 +931,7 @@ bool getPositionFromMarvelmindHedge (struct MarvelmindHedge * hedge,
 // onlyNew: print only new positions
 //////////////////////////////////////////////////////////////////////////////
 void printPositionFromMarvelmindHedge (struct MarvelmindHedge * hedge,
-    bool onlyNew)
+    bool onlyNew, int *address, float *x, float *y, float *z, float *angle, uint32_t *time)
 {uint8_t i,j;
  double xm,ym,zm;
 
