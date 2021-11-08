@@ -131,3 +131,4 @@ dmypy.json
 images/
 annotations/
 .DS*
+.vscode/launch.json

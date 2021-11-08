@@ -15,8 +15,6 @@ logging.basicConfig(level=logging.DEBUG)
 
 class VoitureAutonome :
 
-    test="salut"
-
     def __init__(self, show_video: bool):
         logging.info("VoitureAutonome instanciée !")
         self.__SHOW_VIDEO = show_video

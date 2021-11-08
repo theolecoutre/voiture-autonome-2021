@@ -5,7 +5,6 @@
 /////////////////////////////////////////////////////////////////
 
 #include <Servo.h> 
-#include <NewPing.h>  //https://bitbucket.org/teckel12/arduino-new-ping/downloads/
 
 #define TRIG_PIN A4 
 #define ECHO_PIN A5 
@@ -18,7 +17,6 @@ int E2 = 6;     //M2 Speed Control
 int M1 = 4;     //M1 Direction Control
 int M2 = 7;     //M1 Direction Control
 
-NewPing sonar(TRIG_PIN, ECHO_PIN, MAX_DISTANCE); 
 Servo myservo;   
 
 int distance = 100;
@@ -31,13 +29,13 @@ void setup(void)
   myservo.attach(8);  
   myservo.write(115); 
   delay(2000);
-  distance = readPing();
+  distance = 10;
   delay(100);
-  distance = readPing();
+  distance = 10;
   delay(100);
-  distance = readPing();
+  distance = 10;
   delay(100);
-  distance = readPing();
+  distance = 10;
   delay(100);
   Serial.println(distance);
 } 
@@ -74,7 +72,6 @@ void loop(void)
  {
   moveForward();
  }
- distance = readPing();
 }
 
 void turnRight() {
@@ -124,7 +121,7 @@ int lookRight()
 {
     myservo.write(50); 
     delay(500);
-    int distance = readPing();
+    int distance = 10;
     delay(100);
     myservo.write(115); 
     Serial.print("Looking right. Distance:");
@@ -136,7 +133,7 @@ int lookLeft()
 {
     myservo.write(170); 
     delay(500);
-    int distance = readPing();
+    int distance = 10;
     delay(100);
     myservo.write(115); 
     Serial.print("Looking left. Distance:");
@@ -144,15 +141,6 @@ int lookLeft()
     return distance;
 }
 
-int readPing() { 
-  delay(70);
-  int cm = sonar.ping_cm();
-  if(cm==0)
-  {
-    cm = 250;
-  }
-  return cm;
-}
 
 void moveForward() {
 
@@ -169,4 +157,3 @@ void moveForward() {
    }
   }
 }
-
