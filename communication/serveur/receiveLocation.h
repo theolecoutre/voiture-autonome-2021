@@ -14,8 +14,9 @@
 #include "../auxiliarFunctions.h"
 
 #define ERROR               -1
-#define REMOTE_PORT         3000
-#define REMOTE_IP           "127.0.0.1"
+#define LOCAL_PORT         3000
+#define LOCAL_IP           "127.0.0.1"
 #define MAX_BUFFER_LENGTH   80
+#define MAX_CONN            1
 
 #endif

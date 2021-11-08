@@ -931,9 +931,10 @@ bool getPositionFromMarvelmindHedge (struct MarvelmindHedge * hedge,
 // onlyNew: print only new positions
 //////////////////////////////////////////////////////////////////////////////
 void printPositionFromMarvelmindHedge (struct MarvelmindHedge * hedge,
-    bool onlyNew, int *address, float *x, float *y, float *z, float *angle, uint32_t *time)
-{uint8_t i,j;
- double xm,ym,zm;
+    bool onlyNew, int *addressHedge, float *x, float *y, float *z, float *angle, uint32_t *time)
+{
+    uint8_t i,j;
+    double xm,ym,zm;
 
     if (hedge->haveNewValues_ || (!onlyNew))
     {
@@ -974,6 +975,15 @@ void printPositionFromMarvelmindHedge (struct MarvelmindHedge * hedge,
                             position.address, xm, ym, zm, position.angle, position.timestamp);
                 }
             }
+
+            *addressHedge = (int) position.address;
+            *x = xm;
+            *y = ym;
+            *z = zm;
+            *angle = position.angle;
+            *time = position.timestamp;
+
+
             hedge->haveNewValues_=false;
         }
     }

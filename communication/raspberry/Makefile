@@ -11,4 +11,3 @@ receiveCommands:
 
 clean:
 	rm -rf *.o sendLocation receiveCommands
-

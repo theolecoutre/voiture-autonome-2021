@@ -19,7 +19,7 @@ void semCallback()
 int establishConnection()
 {
     int sock;
-    struct sockaddr_in adrRBPI;
+    struct sockaddr_in adrServer;
     int choice;
     char *errorStr;
 
@@ -29,11 +29,11 @@ int establishConnection()
 
     check_error("Error opening socket\n", sock, ERROR);
 
-    adrRBPI.sin_family      = AF_INET;
-    adrRBPI.sin_port        = htons(REMOTE_PORT);
-    adrRBPI.sin_addr.s_addr = inet_addr(REMOTE_IP);
+    adrServer.sin_family      = AF_INET;
+    adrServer.sin_port        = htons(REMOTE_PORT);
+    adrServer.sin_addr.s_addr = inet_addr(REMOTE_IP);
 
-    check_error("Connect Error\n", connect(sock, (const struct sockaddr *) &adrRBPI, sizeof(adrRBPI)), ERROR);
+    check_error("Connect Error\n", connect(sock, (const struct sockaddr *) &adrServer, sizeof(adrServer)), ERROR);
 
     return sock;
 }
@@ -93,8 +93,9 @@ int main (int argc, char *argv[])
         // "Address: %d, X: %.3f, Y: %.3f, Z: %.3f, Angle: %.1f  at time T: %u\n"
         printPositionFromMarvelmindHedge (hedge, true, &address, &x, &y, &z, &angle, &time);   
         bzero(buffer, sizeof(buffer));
-        sprintf (buffer, "%d;%.3f;%.3f;%.3f;%.1f;%u", address, x, y, z, angle, time);
+        sprintf (buffer, "Address: %d, X: %.3f, Y: %.3f, Z: %.3f, Angle: %.1f  at time T: %u\n", address, x, y, z, angle, time);
         sendABuffer(sock, buffer);
+        usleep(10000);
     }
 
     // Exit
