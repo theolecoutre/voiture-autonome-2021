@@ -17,7 +17,7 @@ class SerialCommunicator :
             print(f"{self.arduino.port} connected to Arduino for writing")
             try:
                     self.arduino.write(("0" + message).encode())
-                    #time.sleep(0.1) #wait for arduino to answer
+                    time.sleep(0.1) #wait for arduino to answer
             except Exception as e:
                 print (f"Excpetion {e}")
     

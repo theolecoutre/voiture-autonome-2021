@@ -11,6 +11,7 @@ import pickle
 
 from detected_objects import DetectedObject
 import Suiveur_de_ligne
+import serial_communicator
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -120,7 +121,10 @@ class VoitureAutonome :
                 self.attente = False
         return
 
-
+    def sendInfosToArduino(self):
+        self.serial_communicator = serial_communicator.SerialCommunicator()
+        msg = f'{self.vitesse};{self.direction}'
+        self.serial_communicator.sendMessage(msg)
 
 
     def drive(self):
