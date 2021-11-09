@@ -10,6 +10,7 @@ import struct
 import pickle
 
 from detected_objects import DetectedObject
+import Suiveur_de_ligne
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -18,8 +19,12 @@ class VoitureAutonome :
     def __init__(self, show_video: bool):
         logging.info("VoitureAutonome instanciée !")
         self.__SHOW_VIDEO = show_video
+        self.vitesse = 10 #on initialise la vitesse à 0, la voiture reste à l'arrêt
+        self.direction = 90 #on initialise l'angle de braquage à 90, le point milieu
+        self.attente = False #variable indiquant si la voiture est en attente (v=0 en attendant)
+        self.attenteStart = 0 #le timestamp auquel l'attente a débuté
 
-    def initVideoServer(self):
+    def initVideoServer(self): #démarre la socket vidéo et attend qu'un client se connecte
         server_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         socket_address = (config.SERVER_IP,config.SERVER_PORT)
         server_socket.bind(socket_address)
@@ -28,7 +33,7 @@ class VoitureAutonome :
         logging.info("Attente de la connexion du client...")
         self.client_socket,addr = server_socket.accept()
 
-    def initObjectDetection(self):
+    def initObjectDetection(self): #charge la modèle en cache et démarre le flux vidéo
         startTime = time.time()
         self.interpreter = tflite.Interpreter(model_path=config.PATH_TO_MODEL, experimental_delegates=[tflite.load_delegate(config.TPU_LIB)])
         with open(config.PATH_TO_LABELS, 'r') as f:
@@ -46,7 +51,7 @@ class VoitureAutonome :
 
         logging.debug("VideoStream lancé, dimensions : %i x %i", self.videoWidth, self.videoHeight)
 
-    def processObjectDetectionOnFrame(self, frame, boxes, classes, scores):
+    def processObjectDetectionOnFrame(self, frame, boxes, classes, scores): #traite les détections faites sur une image
         detectedObjects = []
         for i in range(len(scores)):
                 if ((scores[i] > config.MIN_CONF_THRESH) and (scores[i] <= 1.0)):
@@ -56,7 +61,7 @@ class VoitureAutonome :
                     ymax = int(min(self.videoHeight,(boxes[i][2] * self.videoHeight)))
                     xmax = int(min(self.videoWidth,(boxes[i][3] * self.videoWidth)))
 
-                    object = DetectedObject(self.labels[int(classes[i])], xmax-xmin, ymax-ymin, self.videoWidth)
+                    object = DetectedObject(self.labels[int(classes[i])], xmax-xmin, ymax-ymin, self.videoWidth, self)
 
                     detectedObjects.append(object)
 
@@ -78,7 +83,7 @@ class VoitureAutonome :
             print("----------")
         return frame
 
-    def invokeModelOnFrame(self, frame):
+    def invokeModelOnFrame(self, frame): #
         frameRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         frameResized = cv2.resize(frameRGB, (self.inputDetails[0]['shape'][2], self.inputDetails[0]['shape'][1]))
         inputData = np.expand_dims(frameResized, axis=0)
@@ -91,6 +96,30 @@ class VoitureAutonome :
         classes = self.interpreter.get_tensor(self.outputDetails[1]['index'])[0]
         scores = self.interpreter.get_tensor(self.outputDetails[2]['index'])[0]
         return (boxes, classes, scores)
+    
+    def afficherInfosVoiture(self):
+        logging.debug("--- INFORMATIONS VOITURE ---")
+        logging.debug("Vitesse : " + str(self.vitesse))
+        logging.debug("Angle de braquage : " + str(self.direction))
+        logging.debug("Attente : " + str(self.attente))
+        logging.debug("Attente start : " + str(self.attenteStart))
+        logging.debug("Time : " + str(time.time()))
+
+
+    def setVitesse(self, vitesse : int):
+        if vitesse >= 0: #on vérifie que la vitesse est positive
+            if vitesse != self.vitesse: #on vérifie que la vitesse n'est as déjà celle programmée
+                self.vitessePrecedente = self.vitesse #on enregistre la vitesse précédente en cas de fin de limitation future
+                self.vitesse = vitesse #
+
+    def nextStepConduite(self):
+        if self.attente :
+            self.setVitesse(0)
+            if (time.time() - self.attenteStart > 3): #si l'attente a démarré il y a plus de 3 secondes
+                self.setVitesse(self.vitessePrecedente)
+                self.attente = False
+        return
+
 
 
 
@@ -100,10 +129,14 @@ class VoitureAutonome :
         self.initObjectDetection()
         while self.videoStream.isOpened():
             ret, frame = self.videoStream.read()
+
+            frame = cv2.rotate(frame, cv2.ROTATE_180)
             
             boxes, classes, scores = self.invokeModelOnFrame(frame)
 
             frame = self.processObjectDetectionOnFrame(frame, boxes, classes, scores)
+
+            self.nextStepConduite()
 
 
             if self.__SHOW_VIDEO:
@@ -117,3 +150,4 @@ class VoitureAutonome :
 
                 if cv2.waitKey(1) == ord('q'):
                     break """
+            self.afficherInfosVoiture()
