@@ -16,14 +16,12 @@ void semCallback()
 	sem_post(sem);
 }
 
-int establishConnection()
+int establishConnectionServer()
 {
     int sock;
     struct sockaddr_in adrServer;
     int choice;
     char *errorStr;
-
-    char buffer [MAX_BUFFER_LENGTH + 1];
 
     sock = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -38,15 +36,37 @@ int establishConnection()
     return sock;
 }
 
+int establishConnectionPythonServer()
+{
+    int sock;
+    struct sockaddr_in adrServer;
+
+    bzero(&adrServer, sizeof(adrServer));
+
+    // inet_pton(AF_INET, PYTHON_IP, &adrServer.sin_addr);
+    adrServer.sin_addr.s_addr = inet_addr(PYTHON_IP);
+    adrServer.sin_port = htons(PYTHON_PORT);
+    adrServer.sin_family = AF_INET;
+
+
+    sock = socket(AF_INET, SOCK_STREAM, 0);
+    check_error("Error opening socket\n", sock, ERROR);
+
+    check_error("Connect Error\n", connect(sock, (const struct sockaddr *) &adrServer, sizeof(adrServer)), ERROR);
+
+    printf ("Connected to python server\n");
+
+    return sock;
+
+}
+
 int main (int argc, char *argv[])
 {
 
     char buffer [MAX_BUFFER_LENGTH + 1]; 
-    int sock;
+    int sock, sockPython;
     // "Address: %d, X: %.3f, Y: %.3f, Z: %.3f, Angle: %.1f  at time T: %u\n"
-    int address;
-    float x, y, z, angle;
-    uint32_t time;
+    location l;
 
     // get port name from command line arguments (if specified)
     const char * ttyFileName;
@@ -73,7 +93,8 @@ int main (int argc, char *argv[])
 	sem = sem_open(DATA_INPUT_SEMAPHORE, O_CREAT, 0777, 0);
 
     // TCP
-    sock = establishConnection();
+    // sock = establishConnectionServer();
+    sockPython = establishConnectionPythonServer();
 
     // Main loop
     while ((!terminateProgram) && (!hedge->terminationRequired))
@@ -91,11 +112,16 @@ int main (int argc, char *argv[])
 
 
         // "Address: %d, X: %.3f, Y: %.3f, Z: %.3f, Angle: %.1f  at time T: %u\n"
-        printPositionFromMarvelmindHedge (hedge, true, &address, &x, &y, &z, &angle, &time);   
+        printPositionFromMarvelmindHedge (hedge, true, &l.address, &l.x, &l.y, &l.z, &l.angle, &l.time);   
         bzero(buffer, sizeof(buffer));
-        sprintf (buffer, "Address: %d, X: %.3f, Y: %.3f, Z: %.3f, Angle: %.1f  at time T: %u\n", address, x, y, z, angle, time);
-        sendABuffer(sock, buffer);
+        sprintf (buffer, "Address: %d, X: %.3f, Y: %.3f, Z: %.3f, Angle: %.1f  at time T: %u\n", l.address, l.x, l.y, l.z, l.angle, l.time);
+        // sendABuffer(sock, buffer);
+
+        //sending to python program
+        sendMessage(sockPython, &l, sizeof(l));
         usleep(10000);
+
+
     }
 
     // Exit

@@ -26,3 +26,9 @@ void clearBreakLine (char *string)
     }
 
 }
+
+void sendMessage (int sock, void *msg, uint32_t msgSize)
+{
+    write(sock, msg, msgSize);
+    usleep(1000);
+}

@@ -10,7 +10,6 @@ import struct
 import pickle
 
 from detected_objects import DetectedObject
-import Suiveur_de_ligne
 import serial_communicator
 
 logging.basicConfig(level=logging.DEBUG)

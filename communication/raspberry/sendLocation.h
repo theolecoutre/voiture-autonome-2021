@@ -25,6 +25,17 @@
 #define REMOTE_IP           "127.0.0.1"
 #define MAX_BUFFER_LENGTH   80
 
+#define PYTHON_PORT         2300
+#define PYTHON_IP           "127.0.0.1"
+
+typedef struct location_t
+{
+    int address;
+    float x, y, z, angle;
+    uint32_t time;
+
+} location;
+
 void sendStartVoiture();
 void sendStopVoiture();
 void sendCoordinates();
