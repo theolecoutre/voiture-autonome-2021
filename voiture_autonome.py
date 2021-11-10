@@ -123,7 +123,7 @@ class VoitureAutonome :
 
     def sendInfosToArduino(self):
         self.serial_communicator = serial_communicator.SerialCommunicator()
-        msg = f'{self.vitesse};{self.direction}'
+        msg = '{:0>2}{:0>3}'.format(self.vitesse, self.direction)
         self.serial_communicator.sendMessage(msg)
 
     def chooseADirection(self, pointA, pointB, possible_dirs):
