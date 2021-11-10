@@ -12,6 +12,7 @@ from numpy import dot
 
 from detected_objects import DetectedObject
 import serial_communicator
+from communication.interface_c_python import SocketServer
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -24,6 +25,7 @@ class VoitureAutonome :
         self.direction = 90 #on initialise l'angle de braquage à 90, le point milieu
         self.attente = False #variable indiquant si la voiture est en attente (v=0 en attendant)
         self.attenteStart = 0 #le timestamp auquel l'attente a débuté
+        self.infosC = SocketServer() #receive location and other commands from C programs.
 
     def initVideoServer(self): #démarre la socket vidéo et attend qu'un client se connecte
         server_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -126,12 +128,31 @@ class VoitureAutonome :
         msg = '{:0>2}{:0>3}'.format(self.vitesse, self.direction)
         self.serial_communicator.sendMessage(msg)
 
+    def calculatePossibleDirs(self, pannel):
+        #to do. 
+        location = self.infosC.receiveLocation()
+        possible_dirs = None
+        if (pannel == "ALL"):
+          possible_dirs.append([self.direction]) 
+        elif(pannel == "LEFT"):
+          possible_dirs.append([self.direction]) 
+            
+        elif(pannel == "RIGHT"):
+          possible_dirs.append([self.direction]) 
+        
+        elif(pannel == "FWD_LEFT"):
+          possible_dirs.append([self.direction]) 
+        
+        elif(pannel == "FWD_RIGHT"):
+          possible_dirs.append([self.direction]) 
+
+
     def chooseADirection(self, pointA, pointB, possible_dirs):
         #pointA, pointB : [x, y]
         #possible_dirs : [[x, y],
         #                 [x, y]...]
         # vector distance = (yb- ya)^2 + (xb - xa)^2
-        # d(distance)/dxa = -2*(xb - xa)
+        # d(distance)/dxa = -2(xb - xa)
         # d(distance)/dya = -2(yb - ya)
         max_dot = 0
         best_dir = []
@@ -144,9 +165,6 @@ class VoitureAutonome :
                 best_dir = dir
         
         return best_dir
-
-
-
 
 
     def drive(self):

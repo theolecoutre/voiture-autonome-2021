@@ -1,4 +1,16 @@
+#include <stdio.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <unistd.h>
+
 #include "sendLocation.h"
+
+#define SERVER_PATH "../testdesocketici"
+#define BUFFER_LENGTH 250
+#define FALSE 0
+
 
 bool terminateProgram=false;
 
@@ -38,25 +50,34 @@ int establishConnectionServer()
 
 int establishConnectionPythonServer()
 {
-    int sock;
-    struct sockaddr_in adrServer;
+    int sd = -1, rc;
+    char buffer[BUFFER_LENGTH];
+    struct sockaddr_un serveraddr;
 
-    bzero(&adrServer, sizeof(adrServer));
+    //Création du socket
 
-    // inet_pton(AF_INET, PYTHON_IP, &adrServer.sin_addr);
-    adrServer.sin_addr.s_addr = inet_addr(PYTHON_IP);
-    adrServer.sin_port = htons(PYTHON_PORT);
-    adrServer.sin_family = AF_INET;
+    sd = socket(AF_UNIX, SOCK_STREAM, 0);
+    if (sd < 0)
+    {
+        perror("socket() failed");
+    }
 
+    //Configuration du socket
 
-    sock = socket(AF_INET, SOCK_STREAM, 0);
-    check_error("Error opening socket\n", sock, ERROR);
+    memset(&serveraddr, 0, sizeof(serveraddr));
+    serveraddr.sun_family = AF_UNIX;
+    strcpy(serveraddr.sun_path, SERVER_PATH);
 
-    check_error("Connect Error\n", connect(sock, (const struct sockaddr *) &adrServer, sizeof(adrServer)), ERROR);
+    //Connexion au serveur
+    rc = connect(sd, (struct sockaddr *)&serveraddr, SUN_LEN(&serveraddr));
+    if (rc < 0)
+    {
+        perror("connect() failed");
+    } else {
+        printf("Client connecté au serveur.\n");
+    } 
 
-    printf ("Connected to python server\n");
-
-    return sock;
+    return sd; 
 
 }
 
@@ -65,6 +86,7 @@ int main (int argc, char *argv[])
 
     char buffer [MAX_BUFFER_LENGTH + 1]; 
     int sock, sockPython;
+    int rc;
     // "Address: %d, X: %.3f, Y: %.3f, Z: %.3f, Angle: %.1f  at time T: %u\n"
     location l;
 
@@ -113,18 +135,24 @@ int main (int argc, char *argv[])
 
         // "Address: %d, X: %.3f, Y: %.3f, Z: %.3f, Angle: %.1f  at time T: %u\n"
         printPositionFromMarvelmindHedge (hedge, true, &l.address, &l.x, &l.y, &l.z, &l.angle, &l.time);   
+        
+        //sending to server (ordinateur)
         bzero(buffer, sizeof(buffer));
         sprintf (buffer, "Address: %d, X: %.3f, Y: %.3f, Z: %.3f, Angle: %.1f  at time T: %u\n", l.address, l.x, l.y, l.z, l.angle, l.time);
-        // sendABuffer(sock, buffer);
+        sendABuffer(sock, buffer);
 
         //sending to python program
-        sendMessage(sockPython, &l, sizeof(l));
+        rc = send(sockPython, &l, sizeof(l), 0);
+        if (rc < 0)
+        {
+            perror("send() failed");
+        }
         usleep(10000);
 
 
     }
 
-    // Exit
+    //Exit
     stopMarvelmindHedge (hedge);
     destroyMarvelmindHedge (hedge);
     return 0;
