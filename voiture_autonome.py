@@ -8,6 +8,7 @@ import numpy as np
 import socket
 import struct
 import pickle
+from numpy import dot
 
 from detected_objects import DetectedObject
 import serial_communicator
@@ -124,6 +125,28 @@ class VoitureAutonome :
         self.serial_communicator = serial_communicator.SerialCommunicator()
         msg = f'{self.vitesse};{self.direction}'
         self.serial_communicator.sendMessage(msg)
+
+    def chooseADirection(self, pointA, pointB, possible_dirs):
+        #pointA, pointB : [x, y]
+        #possible_dirs : [[x, y],
+        #                 [x, y]...]
+        # vector distance = (yb- ya)^2 + (xb - xa)^2
+        # d(distance)/dxa = -2*(xb - xa)
+        # d(distance)/dya = -2(yb - ya)
+        max_dot = 0
+        best_dir = []
+        gradient = [-2*(pointB[0] - pointA[0]), -2*(pointB[1] - pointA[1])]
+        
+        for dir in possible_dirs:
+            aux = dot(gradient, dir)
+            if (aux > max_dot):
+                max_dot = aux
+                best_dir = dir
+        
+        return best_dir
+
+
+
 
 
     def drive(self):
