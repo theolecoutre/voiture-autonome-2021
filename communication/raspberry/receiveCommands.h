@@ -23,6 +23,7 @@
 
 void receiveCoordinates();
 void receiveStopVoiture();
+void receiveStartVoiture();
 
 
 #endif

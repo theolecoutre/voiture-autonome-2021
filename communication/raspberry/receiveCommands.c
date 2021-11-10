@@ -10,6 +10,10 @@ void receiveStopVoiture()
     
 }
 
+void receiveStartVoiture(){
+
+}
+
 int main ()
 {
     int sock, sockServer;
@@ -49,6 +53,10 @@ int main ()
 
         case 2:
             receiveStopVoiture();
+            break;
+
+        case 3:
+            receiveStartVoiture();
             break;
 
         default:

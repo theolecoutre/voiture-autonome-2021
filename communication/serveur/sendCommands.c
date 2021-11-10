@@ -3,10 +3,11 @@
 
 void printMenu ()
 {
-    printf ("Bienvenue a la voiture\n");
-    printf ("1-Envoyer une coordonee destination\n");
-    printf ("2-Arreter voiture\n");
-    printf ("Choix ");
+    printf ("Bienvenue à la voiture\n");
+    printf ("1-Envoyer les coordonées de la destination\n");
+    printf ("2-Arreter la voiture\n");
+    printf ("3-Démarrer la voiture\n");
+    printf ("Faites votre choix : ");
 }
 
 void sendCoordinates()

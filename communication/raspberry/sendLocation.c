@@ -95,6 +95,8 @@ int main (int argc, char *argv[])
         bzero(buffer, sizeof(buffer));
         sprintf (buffer, "Address: %d, X: %.3f, Y: %.3f, Z: %.3f, Angle: %.1f  at time T: %u\n", address, x, y, z, angle, time);
         sendABuffer(sock, buffer);
+        //Reset the buffer
+        memset(buffer, 0, MAX_BUFFER_LENGTH+1); 
         usleep(10000);
     }
 
