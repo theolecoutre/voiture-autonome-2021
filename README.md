@@ -209,3 +209,20 @@ Remarques :
 
 
 ## **Suivi de lignes**
+
+Le suivi de lignes va consister en l'identification des bords de la routes, qui sont représenté par des lignes bleu, puis au calcul de la diréction à prendre.
+
+Pour ce faire nous utilisons les bibliothèque de Python suivantes :
+* **OpenCV** est une librairie Python open source , qui permet la lecture du flux vidéo de la webcam, ainsi que son traitement
+* **Numpy** qui permet de manipuler les tableaux
+* **Mathplotlib.pyplot** qui permet d'afficher les images
+* **Logging**  qui permet de tenir un journal
+* **Math** qui permet de faire des opérations mathématiques
+
+### **Principe du code**
+
+Dans un premier temps, le but est d'identifier les bordures de la route. Pour cela nous allons procéder en plusieurs étapes :
+* On transforme le format BRG en HSV pour éviter les différentes teintes de bleu due à la luminosité
+
+* On ne garde que les couleurs entre le bleu clair et le bleu foncé (à noter que open CV utilise une gamme de couleur entre 0 et 180)
+
