@@ -14,8 +14,8 @@ PROXIMITY_RATE = 0.5
 #macOS : libedgetpu.1.dylib
 #linux : libedgetpu.so.1
 
-TPU_LIB = "libedgetpu.1.dylib"
+TPU_LIB = "libedgetpu.so.1"
 
 #Adresse du serveur de vidéo
-SERVER_IP = '172.31.69.100'
-SERVER_PORT = 8000
+SERVER_IP = '10.3.141.1'
+SERVER_PORT = 8003
