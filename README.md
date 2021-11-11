@@ -182,7 +182,7 @@ Pour le robot de type unicycle, on a le modèle cinématique suivant :
 
 
 
-On a en particulier :   vg=aΩg   et   vd=aΩd  
+On a en particulier : 
 
 On peut alors écrire :
 
