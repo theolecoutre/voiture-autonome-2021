@@ -5,7 +5,7 @@ Projet de voiture autonome - Centrale Lille - 2021
 
  **Louis Delsol :** suivi de lignes
  
- **Luiz Fabião Giserman :** communication, réception des coordonnées avec le système MarvelMind
+ **Luiz Fabião Giserman :** communication entre serveur | voiture, serial RaspberryPi arduino, sockets AF_UNIX entre C et Python et envoye des coordonnées du MarvelMind
  
  **Simon Kurney :** impression 3D du support de caméra, automatique
  
@@ -17,7 +17,7 @@ Projet de voiture autonome - Centrale Lille - 2021
  
  **Noé Pigret :** automatique
  
- **Sun Yishan :** communication
+ **Sun Yishan :** communication, reception des coordonées du systéme Marvelmind
  
 
 ## **Reconnaissance d'objets**
