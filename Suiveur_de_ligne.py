@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import logging
 import math
 
-frame = cv2.imread('/Users/louisdelsol/Downloads/Ligne_Bleu.jpeg') # On ouvre une image enregistré sur l'ordinateur
+#frame = cv2.imread('/Users/louisdelsol/Downloads/Ligne_Bleu.jpeg') # On ouvre une image enregistré sur l'ordinateur
 
 
 def detect_edges(frame): # Créé une nouvelle image avec les bordure des objets bleu
@@ -23,7 +23,7 @@ def detect_edges(frame): # Créé une nouvelle image avec les bordure des objets
     lower_blue = np.array([60, 40, 40]) # Bleu clair
     upper_blue = np.array([150, 255, 255]) # Bleu foncé
     mask = cv2.inRange(hsv, lower_blue, upper_blue) # On ne garde que les couleurs entre le bleu clair et le bleu foncé (à noter que open CV utilise une gamme de couleur entre 0 et 180)
-    #plt.imshow(mask) # On affiche la nouvelle image
+    cv2.imshow("mask",mask) # On affiche la nouvelle image
     
     edges = cv2.Canny(mask, 200, 400) # On ne garde que les contours
     #plt.imshow(edges) # On affiche la nouvelle image
@@ -139,7 +139,7 @@ def detect_lane(frame): # Fonction qui résume les précédentes
     
     return lane_lines
 
-lane_lines = detect_lane(frame)
+#lane_lines = detect_lane(frame)
 
 
 def display_lines(frame, lines, line_color=(0, 255, 0), line_width=2):
@@ -151,8 +151,8 @@ def display_lines(frame, lines, line_color=(0, 255, 0), line_width=2):
     line_image = cv2.addWeighted(frame, 0.8, line_image, 1, 1) # On supperpose les 2 images
     return line_image
 
-lane_lines_image = display_lines(frame, lane_lines)
-cv2.imshow("lane lines", lane_lines_image)
+#lane_lines_image = display_lines(frame, lane_lines)
+#cv2.imshow("lane lines", lane_lines_image)
 #plt.imshow(lane_lines_image) # On affiche la nouvelle image
 
 
@@ -186,7 +186,7 @@ def compute_steering_angle(frame, lane_lines):
     logging.debug('new steering angle: %s' % steering_angle)
     return steering_angle
 
-steering_angle = compute_steering_angle(frame, lane_lines)
+#steering_angle = compute_steering_angle(frame, lane_lines)
 
 def display_heading_line(frame, steering_angle, line_color=(0, 0, 255), line_width=5 ):
     heading_image = np.zeros_like(frame)
@@ -211,7 +211,7 @@ def display_heading_line(frame, steering_angle, line_color=(0, 0, 255), line_wid
 
     return heading_image
 
-heading_image = display_heading_line(frame, steering_angle)
+#heading_image = display_heading_line(frame, steering_angle)
 #plt.imshow(heading_image) # On affiche la nouvelle image
 
 
@@ -253,7 +253,7 @@ def test_photo(file):
     
     return steering_angle
 
-test_photo('/Users/louisdelsol/Downloads/IMG-1551.jpg')
+#test_photo('/Users/louisdelsol/Downloads/IMG-1551.jpg')
 
 
 
