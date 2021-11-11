@@ -142,15 +142,15 @@ On envoie des consignes de vitesse et d'angle pour le systéme de controle d'Ard
 
 Robot mobile de type unicycle adapté. La maquette comporte deux roues motrices indépendantes entraînant deux chenilles et se déplace sur un plan en deux dimensions. Elle est équipée de deux moteurs Makeblock avec encodeurs.
 
-![](readme/Schéma Robot.png)
+![](readme/Schema_Robot.png)
 
 **Paramètres géométriques :**
 
-![](readme/Paramètres géométriques.png)
+![](readme/Parametres_geometriques.png)
 
 **Paramètres des moteurs :**
 
-![](readme/Paramètres des moteurs.png)
+![](readme/Parametres_moteurs.png)
 
 **II/ Présentation du problème**
 
@@ -165,7 +165,7 @@ L’objectif est de faire se déplacer la maquette en autonomie sur un circuit c
 
 **III/ Modèle cinématique**
 
-![](readme/Paramétrage cinématique maquette STA.png)
+![](readme/Parametrage_cine_maquette_STA.png)
 
 **Paramétrage du robot :**
 * θ est l’orientation du robot dans le plan de référence
@@ -173,21 +173,21 @@ L’objectif est de faire se déplacer la maquette en autonomie sur un circuit c
 
 Pour le robot de type unicycle, on a le modèle cinématique suivant :
 
-![](readme/équations cinématiques.png)
+![](readme/equations_cinematiques.png)
 
-![](readme/Paramètres robot.png)
+![](readme/Parametres_robot.png)
 
-On a en particulier : ![](readme/expressions vitesses.png)
+On a en particulier : ![](readme/expressions_vitesses.png)
 
 On peut alors écrire :
 
-![](readme/équations cinématiques 2.png)
+![](readme/equations_cinematiques2.png)
 
 **IV/ Modèle dynamique du robot**
 
 On peut écrire les équations du moteur électrique :
 
-![](readme/équations dynamiques.png)
+![](readme/equations_dynamiques.png)
 
 où : J est le moment d’inertie, Cr le couple résistant, f le coefficient de frottement fluide, i le courant traversant le moteur, m la vitesse de rotation du rotor, u la tension en entrée et (L,R,k) différents paramètres du moteur.
 
@@ -201,7 +201,7 @@ On pose y = m  ,  X = (m ; i)  et  U = (Cr  ; u). On trouve dans ce cas :
 
 La commande du robot s'appuie essentiellement sur deux fonctions élémentaires exploitant les consignes reçues depuis le RaspberryPi : la vitesse et un angle.
 
-![](readme/Fonctions élémentaires.png)
+![](readme/Fonctions_elementaires.png)
 
 Remarques : 
 * Prendre un virage s’obtient en additionnant les effets de ces deux fonctions. Pour un virage à gauche par exemple, on peut écrire : Vg=Vav-Vrot et  Vd=Vav+Vrot où Vav est la vitesse imposée par la fonction Avancer et Vrot>0 la composante d’entrée en rotation imposée par la fonction Rotation.
