@@ -14,11 +14,17 @@ import math
 
 #frame = cv2.imread('/Users/louisdelsol/Downloads/Ligne_Bleu.jpeg') # On ouvre une image enregistré sur l'ordinateur
 
+def affiche_image(frame):
+    cv2.namedWindow("image")
+    cv2.imshow("image",frame)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
 def detect_edges(frame): # Créé une nouvelle image avec les bordure des objets bleu
 
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV) # On transforme le format BRG en HSV pour éviter les différentes teintes de bleu due à la luminosité
-    #plt.imshow(hsv) # On affiche la nouvelle image
+    #affiche_image(hsv) # On affiche la nouvelle image
+    plt.imshow(hsv) # On affiche la nouvelle image
     
     lower_blue = np.array([60, 40, 40]) # Bleu clair
     upper_blue = np.array([150, 255, 255]) # Bleu foncé
@@ -83,13 +89,13 @@ def make_points(frame, line): # Renvoie les extrémités de la ligne
 
 def average_slope_intercept(frame, line_segments): # Créé 2 lignes à partir des segments
     """
-    This function combines line segments into one or two lane lines
-    If all line slopes are < 0: then we only have detected left lane
-    If all line slopes are > 0: then we only have detected right lane
+    Cette fonction combine les segments de ligne en une ou deux lignes de voies.
+    Si toutes les pentes de ligne sont < 0 : alors nous n'avons détecté que la voie de gauche.
+    Si toutes les pentes de la ligne sont > 0 : alors nous n'avons détecté que la voie de droite.
     """
     lane_lines = []
     if line_segments is None: # Si il n'y a aucun segment
-        logging.info('No line_segment segments detected')
+        logging.info('Aucun segment de ligne détecté')
         return lane_lines
 
     height, width, _ = frame.shape # On prend les dimenssion de l'image
@@ -103,7 +109,7 @@ def average_slope_intercept(frame, line_segments): # Créé 2 lignes à partir d
     for line_segment in line_segments:
         for x1, y1, x2, y2 in line_segment:
             if x1 == x2:
-                logging.info('skipping vertical line segment (slope=inf): %s' % line_segment) # On ne veut pas les lignes verticales
+                logging.info('On saute un segment de ligne verticale (slope=inf) : %s' % line_segment) # On ne veut pas les lignes verticales
                 continue
             fit = np.polyfit((x1, x2), (y1, y2), 1) # Génére un polynome de degré 1 qui passe par les point de coordonnées (x1, y1) et (x2, y2)
             slope = fit[0]
@@ -123,7 +129,7 @@ def average_slope_intercept(frame, line_segments): # Créé 2 lignes à partir d
     if len(right_fit) > 0:
         lane_lines.append(make_points(frame, right_fit_average)) # On génére la ligne de la partie droite
 
-    logging.debug('lane lines: %s' % lane_lines)  # [[[316, 720, 484, 432]], [[1009, 720, 718, 432]]]
+    logging.debug('lignes de voies: %s' % lane_lines)  # [[[316, 720, 484, 432]], [[1009, 720, 718, 432]]]
 
     return lane_lines
 
@@ -157,16 +163,17 @@ def display_lines(frame, lines, line_color=(0, 255, 0), line_width=2):
 
 
 def compute_steering_angle(frame, lane_lines):
-    """ Find the steering angle based on lane line coordinate
-        We assume that camera is calibrated to point to dead center
+    """ 
+    Trouver l'angle de braquage basé sur les coordonnées de la ligne de la voie.
+    Nous supposons que la caméra est calibrée pour pointer vers le point mort.
     """
     if len(lane_lines) == 0: # Si on ne voit pas de ligne on ne fait rien
-        logging.info('No lane lines detected, do nothing')
+        logging.info('Aucune ligne de couloir détectée, ne rien faire')
         return -90
 
     height, width, _ = frame.shape
     if len(lane_lines) == 1: # Si on voit une ligne, on suit sa direction
-        logging.debug('Only detected one lane line, just follow it. %s' % lane_lines[0])
+        logging.debug('On n a détecté qu une seule ligne de couloir, il faut juste la suivre. %s' % lane_lines[0])
         x1, _, x2, _ = lane_lines[0][0]
         x_offset = x2 - x1
     else:
@@ -183,7 +190,7 @@ def compute_steering_angle(frame, lane_lines):
     angle_to_mid_deg = int(angle_to_mid_radian * 180.0 / math.pi)  # angle (en degrés) par rapport à la ligne verticale centrale
     steering_angle = angle_to_mid_deg + 90  # C'est l'angle de braquage nécessaire à la roue avant de la voiture
 
-    logging.debug('new steering angle: %s' % steering_angle)
+    logging.debug('nouvel angle de braquage: %s' % steering_angle)
     return steering_angle
 
 #steering_angle = compute_steering_angle(frame, lane_lines)
@@ -203,7 +210,10 @@ def display_heading_line(frame, steering_angle, line_color=(0, 0, 255), line_wid
     steering_angle_radian = steering_angle / 180.0 * math.pi
     x1 = int(width / 2)
     y1 = height
-    x2 = int(x1 - height / 2 / math.tan(steering_angle_radian)) # = x1 + x_offset
+    if steering_angle_radian == 0:
+        x2 = x1
+    else:
+        x2 = int(x1 - height / 2 / math.tan(steering_angle_radian)) # = x1 + x_offset
     y2 = int(height / 2)
 
     cv2.line(heading_image, (x1, y1), (x2, y2), line_color, line_width)
@@ -217,9 +227,9 @@ def display_heading_line(frame, steering_angle, line_color=(0, 0, 255), line_wid
 
 def stabilize_steering_angle(curr_steering_angle, new_steering_angle, num_of_lane_lines, max_angle_deviation_two_lines=5, max_angle_deviation_one_lane=1):
     """
-    Using last steering angle to stabilize the steering angle
-    if new angle is too different from current angle, 
-    only turn by max_angle_deviation degrees
+    Utilisation du dernier angle de braquage pour stabiliser l'angle de braquage
+    si le nouvel angle est trop différent de l'angle actuel, 
+    tourner seulement de max_angle_deviation degrés
     """
     if num_of_lane_lines == 2 : # si les deux voies sont détectées, alors on peut dévier davantage
         max_angle_deviation = max_angle_deviation_two_lines
@@ -248,6 +258,7 @@ def test_photo(file):
     frame = cv2.imread(file)
     lane_lines = detect_lane(frame)
     steering_angle = compute_steering_angle(frame, lane_lines)
+    print(steering_angle)
     heading_image = display_heading_line(frame, steering_angle)
     plt.imshow(heading_image) # On affiche la nouvelle image
     
@@ -266,15 +277,64 @@ def test_photo(file):
 
 
 
+#test_photo('/Users/louisdelsol/Downloads/IMG-1572.jpg')
 
 
+def test_vidéo() :
 
+    videoStream = cv2.VideoCapture(0)
+    
+    while videoStream.isOpened():
+        ret, frame = videoStream.read()
 
+    
+        lane_lines = detect_lane(frame)
+        steering_angle = compute_steering_angle(frame, lane_lines)
+        heading_image = display_heading_line(frame, steering_angle)
+    
+        print("Angle : %i",steering_angle)
+    
+        cv2.imshow("Détection d'objets",heading_image)
+    
+        if cv2.waitKey(1) == ord('q'):
+            break
 
+#test_vidéo()
 
+def test_vidéo_stabilize() :
 
+    videoStream = cv2.VideoCapture(0)
+    ret, frame = videoStream.read()
+    lane_lines = detect_lane(frame)
+    curr_steering_angle = compute_steering_angle(frame, lane_lines)
+    
+    while videoStream.isOpened():
+        ret, frame = videoStream.read()
 
+    
+        lane_lines = detect_lane(frame)
+        new_steering_angle = compute_steering_angle(frame, lane_lines)
+        
+        angle_deviation = new_steering_angle - curr_steering_angle
+        if angle_deviation == 0 :
+            new_steering_angle = curr_steering_angle
+        if abs(angle_deviation) > 3 :
+            new_steering_angle = (curr_steering_angle + 3 * np.sign(angle_deviation))
+            
+        
+        heading_image = display_heading_line(frame, new_steering_angle)
+    
+        print("Angle : %i",new_steering_angle)
+    
+        cv2.imshow("Détection d'objets",heading_image)
+        
+        curr_steering_angle = new_steering_angle
+    
+        if cv2.waitKey(1) == ord('q'):
+            break
+        
 
+test_vidéo_stabilize()
 
 
 
