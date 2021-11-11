@@ -108,3 +108,30 @@ Pour chaque image que le réseau de neurones traite, ils produit 3 variables de 
 3. Les **scores**, un tableau contenant le score de chaque potentielle détection (le score est compris entre 0 et 1). Nous considérons les prédictions comme fiables quand elles ont un score supérieur ou égal à 0,7.
 
 Ainsi à partir de ces 3 variables, la maquette pourra connaître, à chaque image transmise par la webcam, la composition de son environnement.
+
+
+## **Communication**
+
+![Le schema du projet](readme/schema.png "Le schema du projet")
+
+Dans cette image, les fleches rouges sont des connections TCP AF_INET. Les noirs entre dispositifs sont des connections seriales et les autres sont des communications sockets AF_UNIX.
+
+### **Côte Serveur**
+
+
+* **Dossier communication/serveur**:
+  * **receiveLocation.c** : Écoutes les données de cordonnées de la voiture par sockets (client TCP). Interface CLI.
+  * **sendCommands.c** : Envoie à la voiture des commands comme nouvelle cordonné de destination ou d'arreter, par example (serveur TCP). Interface CLI.
+* **video_client.py** : Video client TCP pour recevoir le stream de video live.
+
+### **Côte Voiture**
+
+* **Dossier communication/raspberry**:
+  * **receiveCommands.c** : Écoutes les commands du serveur par sockets (client TCP).
+  * **sendLocation.c** : Fait la lecture serial des données du Hedgehog Marvelmind, les envoie par sockets AF_INET au serveur et au **serial_communicator.py** par sockets AF_UNIX
+
+**server_communication.py** : Une class python qui est le serveur AF_UNIX autant que interface pour recuperer les données du programme C dans le programme princpal.
+
+**serial_communicator.py** : Une class interface entre le raspberryPi et l'Arduino. Par le dispositif "/dev/ttyS0" (arduino) on envoie et reçoit des messages. Pour la partie d'Arduino, on a besoin de fixer une charactere qui indique le debut de la message qu'on souhaite envoyer. Cela se passe parce que si on simplement ecoute la porte dans le côté Arduino, il y a beaucoup d'autres communications aleatoires que se passent par la.
+On envoie des consignes de vitesse et d'angle pour le systéme de controle d'Arduino.
+
