@@ -14,8 +14,8 @@
 #include "../auxiliarFunctions.h"
 
 #define ERROR               -1
-#define REMOTE_PORT         3000
-#define REMOTE_IP           "127.0.0.1"
+#define REMOTE_PORT         3001
+#define REMOTE_IP           "10.3.141.1"
 #define MAX_BUFFER_LENGTH   80
 
 void sendStartVoiture();
