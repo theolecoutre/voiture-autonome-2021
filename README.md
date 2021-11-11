@@ -253,4 +253,4 @@ Pour ce faire nous utilisons les bibliothèque de Python suivantes :
 
 ![](readme/Image_heading_line.png)
 
-
+Enfin on transmet l'angle de braquage au véicule pour qu'il puisse se déplacer de facon autonome.
