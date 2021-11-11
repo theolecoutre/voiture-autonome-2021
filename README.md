@@ -206,3 +206,23 @@ La commande du robot s'appuie essentiellement sur deux fonctions élémentaires 
 Remarques : 
 * Prendre un virage s’obtient en additionnant les effets de ces deux fonctions. Pour un virage à gauche par exemple, on peut écrire : Vg=Vav-Vrot et  Vd=Vav+Vrot où Vav est la vitesse imposée par la fonction Avancer et Vrot>0 la composante d’entrée en rotation imposée par la fonction Rotation.
 * Un demi-tour est équivalent ici à une rotation sur place de 180° i.e Demi-tour ~ Rotation(180).
+
+
+## **Suivi de lignes**
+
+Le suivi de lignes va consister en l'identification des bords de la routes, qui sont représenté par des lignes bleu, puis au calcul de la diréction à prendre.
+
+Pour ce faire nous utilisons les bibliothèque de Python suivantes :
+* **OpenCV** est une librairie Python open source , qui permet la lecture du flux vidéo de la webcam, ainsi que son traitement
+* **Numpy** qui permet de manipuler les tableaux
+* **Mathplotlib.pyplot** qui permet d'afficher les images
+* **Logging**  qui permet de tenir un journal
+* **Math** qui permet de faire des opérations mathématiques
+
+### **Principe du code**
+
+Dans un premier temps, le but est d'identifier les bordures de la route. Pour cela nous allons procéder en plusieurs étapes :
+* On transforme le format BRG en HSV pour éviter les différentes teintes de bleu due à la luminosité
+
+* On ne garde que les couleurs entre le bleu clair et le bleu foncé (à noter que open CV utilise une gamme de couleur entre 0 et 180)
+
