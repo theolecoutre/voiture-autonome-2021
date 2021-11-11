@@ -9,7 +9,7 @@ Projet de voiture autonome - Centrale Lille - 2021
  
  **Simon Kurney :** impression 3D du support de caméra, automatique
  
- **Théo Lecoutre :** IA pour la reconnaissance des panneaux et détection d'objets, code Python principal du système
+ **Théo Lecoutre :** IA pour la reconnaissance des panneaux et détection d'objets, code Python principal du système, sockets AF_UNIX internes entre C et Python
  
  **Mário Monteiro :** automatique
  
