@@ -142,18 +142,20 @@ On envoie des consignes de vitesse et d'angle pour le systéme de controle d'Ard
 
 Robot mobile de type unicycle adapté. La maquette comporte deux roues motrices indépendantes entraînant deux chenilles et se déplace sur un plan en deux dimensions. Elle est équipée de deux moteurs Makeblock avec encodeurs.
 
-![](readme/Schema_Robot.png)
+![](readme/Schéma Robot.png)
+
 **Paramètres géométriques :**
 
-![](readme/Parametres_geometriques.png)
+![](readme/Paramètres géométriques.png)
 
 **Paramètres des moteurs :**
 
-![](readme/Parametres_moteurs.png)
+![](readme/Paramètres des moteurs.png)
 
 **II/ Présentation du problème**
 
 L’objectif est de faire se déplacer la maquette en autonomie sur un circuit composé de routes, de signalisation et d’obstacles que le véhicule devra savoir lire. À partir de la connaissance de sa position dans le plan et de l’image de l’environnement devant elle, la voiture devra se débrouiller pour rejoindre le point (les coordonnées) qu’on lui aura communiqué, en suivant les contraintes imposées par l’environnement et la réglementation du circuit.
+
 
 **Hypothèses pour la modélisation :**
 * Aucun glissement latéral (le robot ne peut pas glisser latéralement sur ses chenilles)
@@ -163,7 +165,7 @@ L’objectif est de faire se déplacer la maquette en autonomie sur un circuit c
 
 **III/ Modèle cinématique**
 
-![](readme/Parametrage_cine_maquette_STA.png)
+![](readme/Paramétrage cinématique maquette STA.png)
 
 **Paramétrage du robot :**
 * θ est l’orientation du robot dans le plan de référence
@@ -171,22 +173,21 @@ L’objectif est de faire se déplacer la maquette en autonomie sur un circuit c
 
 Pour le robot de type unicycle, on a le modèle cinématique suivant :
 
-![](readme/equations_cinematiques.png)
+![](readme/équations cinématiques.png)
 
-![](readme/Parametres_robot.png)
+![](readme/Paramètres robot.png)
 
-On a en particulier : ![](readme/expressions_vitesses.png)
+On a en particulier : ![](readme/expressions vitesses.png)
 
 On peut alors écrire :
 
-![](readme/equations_cinematiques2.png)
-
+![](readme/équations cinématiques 2.png)
 
 **IV/ Modèle dynamique du robot**
 
 On peut écrire les équations du moteur électrique :
 
-![](readme/equations_dynamiques.png)
+![](readme/équations dynamiques.png)
 
 où : J est le moment d’inertie, Cr le couple résistant, f le coefficient de frottement fluide, i le courant traversant le moteur, m la vitesse de rotation du rotor, u la tension en entrée et (L,R,k) différents paramètres du moteur.
 
@@ -196,36 +197,20 @@ On pose y = m  ,  X = (m ; i)  et  U = (Cr  ; u). On trouve dans ce cas :
 
 ![](readme/Matrices.png)
 
-
 **V/ Loi de commande et simulation (sur Matlab)**
 
 La commande du robot s'appuie essentiellement sur deux fonctions élémentaires exploitant les consignes reçues depuis le RaspberryPi : la vitesse et un angle.
 
-![](readme/Fonctions_elementaires.png)
+![](readme/Fonctions élémentaires.png)
 
 Remarques : 
 * Prendre un virage s’obtient en additionnant les effets de ces deux fonctions. Pour un virage à gauche par exemple, on peut écrire : Vg=Vav-Vrot et  Vd=Vav+Vrot où Vav est la vitesse imposée par la fonction Avancer et Vrot>0 la composante d’entrée en rotation imposée par la fonction Rotation.
 * Un demi-tour est équivalent ici à une rotation sur place de 180° i.e Demi-tour ~ Rotation(180).
 
-**Pilotage du robot :**
-
-Le pilotage du robot passe par la commande conjointe de ses deux roues motrices (indépendantes l’une de l’autre). En envoyant une tension en entrée des moteurs, on a en sortie les vitesses de rotation des roues desquelles sont issues les vitesses ![](readme/expressions_vitesses.png).
-Ce qui donne dans une première approximation :
-
-![](readme/modele_matlab.png)
-
-Bloc ‘Cinématique’ (permet d’extraire la vitesse et la rotation du robot) :
-
-![](readme/bloc_cinematique.png)
-
-Bloc ‘Conversion’ (pour récupérer les vitesses selon (x,y)) :
-
-![](readme/bloc_conversion.png)
-
 
 ## **Suivi de lignes**
 
-Le suivi de lignes va consister en l'identification des bords de la routes, qui sont représenté par des lignes bleu, puis au calcul de la diréction à prendre.
+Le suivi de lignes va consister en l'identification des bords de la routes, qui sont représenté par des lignes bleu, puis au calcul de la direction à prendre.
 
 Pour ce faire nous utilisons les bibliothèque de Python suivantes :
 * **OpenCV** est une librairie Python open source , qui permet la lecture du flux vidéo de la webcam, ainsi que son traitement
@@ -236,7 +221,7 @@ Pour ce faire nous utilisons les bibliothèque de Python suivantes :
 
 ### **Principe du code**
 
-Dans un premier temps, le but est d'identifier les bordures de la route. Pour cela nous allons procéder en plusieurs étapes :
+**Dans un premier temps, le but est d'identifier les bordures de la route. Pour cela nous allons procéder en plusieurs étapes :**
 
 ![](readme/IMG-1570.jpg) 
 
@@ -260,5 +245,12 @@ Dans un premier temps, le but est d'identifier les bordures de la route. Pour ce
 * On relit ces segments pour former 2 droites
 
 ![](readme/Image_lines.png)
+
+**Dans un second temps, nous allons déterminer la direction à prendre. voici les étapes :**
+
+* On trouve l'angle de braquage basé sur les coordonnées des lignes en fonction de si on repère deux, une ou aucune ligne.
+* On détermine la ligne de cap à partir de l'angle de braquage
+
+![](readme/Image_heading_line.png)
 
 
