@@ -1,6 +1,17 @@
 # **voiture-autonome-2021**
 Projet de voiture autonome - Centrale Lille - 2021
 
+## **Répartition du travail**
+
+ Louis Delsol : suivi de lignes
+ Luiz Fabião Giserman : communication, réception des coordonnées avec le système MarvelMind
+ Simon Kurney : impression 3D du support de caméra, automatique
+ Théo Lecoutre : IA pour la reconnaissance des panneaux et détection d'objets, code Python principal du système
+ Mário Monteiro : automatique
+ Ilyas Ouradi : communication, solution alternative pour l'IA (modèle RCNN)
+ Noé Pigret : automatique
+ Sun Yishan : communication
+ 
 
 ## **Reconnaissance d'objets**
 
