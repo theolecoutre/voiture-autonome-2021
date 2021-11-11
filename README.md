@@ -3,7 +3,7 @@ Projet de voiture autonome - Centrale Lille - 2021
 
 ## **Répartition du travail**
 
- **Louis Delsol :** suivi de lignes
+ **Louis Delsol :** Code Python pour le suivi de lignes
  
  **Luiz Fabião Giserman :** communication entre serveur | voiture, serial RaspberryPi arduino, sockets AF_UNIX entre C et Python et envoye des coordonnées du MarvelMind
  
