@@ -231,3 +231,19 @@ Dans un premier temps, le but est d'identifier les bordures de la route. Pour ce
 
 * On ne garde que les couleurs entre le bleu clair et le bleu foncé (à noter que open CV utilise une gamme de couleur entre 0 et 180)
 
+![](readme/Image_Bleu.png)
+
+* On ne garde que les contours des objets bleu
+
+![](readme/Image_edges.png)
+
+* Comme il peut y avoir des objets parasites sur le haut de l'image, on créé une nouvelle image avec seulement les bordure du bas
+
+![](readme/Image_bottom.png)
+
+* On transforme les bordures (qui sont un ensemble de points) en segments
+* On relit ces segments pour former 2 droites
+
+![](readme/Image_lines.png)
+
+
