@@ -8,11 +8,12 @@ import numpy as np
 import socket
 import struct
 import pickle
+import threading
 from numpy import dot
 
 from detected_objects import DetectedObject
 import serial_communicator
-from communication.interface_c_python import SocketServer
+from communication.interface_c_python import Location, SocketServer
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -26,6 +27,16 @@ class VoitureAutonome :
         self.attente = False #variable indiquant si la voiture est en attente (v=0 en attendant)
         self.attenteStart = 0 #le timestamp auquel l'attente a débuté
         self.infosC = SocketServer() #receive location and other commands from C programs.
+        logging.info("Réception de la première localisation...")
+        self.location = self.infosC.receiveLocation()
+        logging.info("Réception de la première commande...")
+        self.commandeActuelle = self.infosC.receiveCommands()
+
+    def updateCommand(self, commande):
+        self.commandeActuelle = self.infosC.receiveCommands()
+    
+    def updateLocation(self):
+        self.location = self.infosC.receiveLocation()
 
     def initVideoServer(self): #démarre la socket vidéo et attend qu'un client se connecte
         server_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -172,6 +183,8 @@ class VoitureAutonome :
             self.initVideoServer()
         self.initObjectDetection()
         while self.videoStream.isOpened():
+            tLocation = threading.Thread(target=self.updateLocation()) #lance un thread pour mettre à jour la position actuelle
+            tCommand = threading.Thread(target=self.updateCommand()) #lance un thread pour mettre à jour la commande actuelle
             ret, frame = self.videoStream.read()
 
             frame = cv2.rotate(frame, cv2.ROTATE_180)
@@ -181,6 +194,10 @@ class VoitureAutonome :
             frame = self.processObjectDetectionOnFrame(frame, boxes, classes, scores)
 
             self.nextStepConduite()
+
+            tLocation.join() #attend la mise à jour de la position
+            tCommand.join() #attend la mise à jour de la commande actuelle
+
 
 
             if self.__SHOW_VIDEO:
