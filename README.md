@@ -229,7 +229,7 @@ Pour ce faire nous utilisons les bibliothèque de Python suivantes :
 
 ![](readme/Image_HSV.png)
 
-* On ne garde que les couleurs entre le bleu clair et le bleu foncé (à noter que open CV utilise une gamme de couleur entre 0 et 180)
+* On ne garde que les couleurs entre le bleu clair et le bleu foncé
 
 ![](readme/Image_Bleu.png)
 
