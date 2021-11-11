@@ -223,6 +223,6 @@ Pour ce faire nous utilisons les bibliothèque de Python suivantes :
 
 Dans un premier temps, le but est d'identifier les bordures de la route. Pour cela nous allons procéder en plusieurs étapes :
 * On transforme le format BRG en HSV pour éviter les différentes teintes de bleu due à la luminosité
-
+![](readme/Image_HSV.png)
 * On ne garde que les couleurs entre le bleu clair et le bleu foncé (à noter que open CV utilise une gamme de couleur entre 0 et 180)
 
