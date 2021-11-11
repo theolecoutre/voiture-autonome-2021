@@ -13,7 +13,7 @@ Projet de voiture autonome - Centrale Lille - 2021
  
  **Mário Monteiro :** automatique
  
- **Ilyas Ouradi :** communication, solution alternative pour l'IA (modèle RCNN)
+ **Ilyas Ouardi :** communication, solution alternative pour l'IA (modèle RCNN)
  
  **Noé Pigret :** automatique
  
