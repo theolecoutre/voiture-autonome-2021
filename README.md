@@ -33,7 +33,7 @@ Le matériel utilisé pour la perception de l'environnement se compose de :
 
 ### **Logiciel**
 La partie logicielle se décompose en 2 parties :
-* **Open CV** est une librairie Python open source , qui permet la lecture du flux vidéo de la webcam, ainsi que son traitement
+* **OpenCV** est une librairie Python open source , qui permet la lecture du flux vidéo de la webcam, ainsi que son traitement
 * **Tensorflow** est une plateforme complète d'intelligence artifcielle : elle permettra de créer notre modèle, de l'entraîner, et de connaître ses prédictions pour notre environnement.
 
 ### **Déroulé du travail**
@@ -55,7 +55,6 @@ Dans un premier temps, nous avons identifié les objets que notre maquette doit 
 * panneau **zone 30**
 * panneau de **vitesse 50**
 * panneau de **passage piéton**
-* **piéton**
 
 [comment]: <> (TODO : mettre les images des objets)
 
