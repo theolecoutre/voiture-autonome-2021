@@ -156,7 +156,6 @@ Robot mobile de type unicycle adapté. La maquette comporte deux roues motrices 
 
 L’objectif est de faire se déplacer la maquette en autonomie sur un circuit composé de routes, de signalisation et d’obstacles que le véhicule devra savoir lire. À partir de la connaissance de sa position dans le plan et de l’image de l’environnement devant elle, la voiture devra se débrouiller pour rejoindre le point (les coordonnées) qu’on lui aura communiqué, en suivant les contraintes imposées par l’environnement et la réglementation du circuit.
 
-
 **Hypothèses pour la modélisation :**
 * Aucun glissement latéral (le robot ne peut pas glisser latéralement sur ses chenilles)
 * Roulement sans glissement (les chenilles roulent sans glisser sur le sol)
@@ -183,6 +182,7 @@ On peut alors écrire :
 
 ![](readme/equations_cinematiques2.png)
 
+
 **IV/ Modèle dynamique du robot**
 
 On peut écrire les équations du moteur électrique :
@@ -196,6 +196,7 @@ On cherche alors à écrire le modèle dynamique du moteur sous la forme : X’=
 On pose y = m  ,  X = (m ; i)  et  U = (Cr  ; u). On trouve dans ce cas :
 
 ![](readme/Matrices.png)
+
 
 **V/ Loi de commande et simulation (sur Matlab)**
 
