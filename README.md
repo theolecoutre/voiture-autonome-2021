@@ -61,7 +61,7 @@ Dans un premier temps, nous avons identifié les objets que notre maquette doit 
 
 Une fois identifiés, il nous faut des images de ces objets pour consituter notre dataset. Pour cela, nous avons choisi d'imprimer les panneaux, pour ensuite les prendre en photo sous différents profils (environ 50 photos de chaque panneau). De même le piéton sera modélisé par un stylo.
 
-Une fois que nous avons ces images, nous devons les traiter à la main, afin d'indiquer à notre modèle quels sont et pù sont les objets à détecter sur ces images.
+Une fois que nous avons ces images, nous devons les traiter à la main, afin d'indiquer à notre modèle quels sont et où sont les objets à détecter sur ces images.
 
 Nous avons utilisé le logiciel labelImg qui permet de réaliser cela : à partir des bounding boxes que nous plaçons sur une image, LabelImg génère un fichier XML par image, au format Pascal VOC, indiquant les coordonnées de chaque bounding box, et l'objet identifié.
 
@@ -78,7 +78,7 @@ Il existe deux solutions de transfer learning :
 * **ré-entraîner uniquement les dernières couches du modèle :** il s'agit d'uniquement ré-entraîner les dernières couches du modèle (celles qui donnent finalement la classification) sur notre dataset. Le résultat sera moins précis qu'un ré-entraînement total, mais permet un gain de temps non négligeable
 * **ré-entraîner le modèle entier :** cela permet généralement une meilleure précision, mais nécessite beaucoup de temps et de ressources. De plus, il faut généralement un grand dataset (beaucoup plus de 50 images par objet, ce qui est déjà peu...) pour éviter l'overfitting.
 
-Nous nous sommes donc naturellement tournés vers la seconde solution.
+Nous nous sommes donc naturellement tournés vers la première solution.
 
 Nous avons choisi le réseau de neurones SSD MobileNet V1, qui est compatible avec le TPU Coral et qui présente un rapport précision/rapidité intéressant. Ce modèle est par défaut entraîné avec le dataset COCO, constitué de 90 objets de la vie courante.
 
