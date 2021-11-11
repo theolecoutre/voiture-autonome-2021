@@ -207,6 +207,21 @@ Remarques :
 * Prendre un virage s’obtient en additionnant les effets de ces deux fonctions. Pour un virage à gauche par exemple, on peut écrire : Vg=Vav-Vrot et  Vd=Vav+Vrot où Vav est la vitesse imposée par la fonction Avancer et Vrot>0 la composante d’entrée en rotation imposée par la fonction Rotation.
 * Un demi-tour est équivalent ici à une rotation sur place de 180° i.e Demi-tour ~ Rotation(180).
 
+**Pilotage du robot :**
+
+Le pilotage du robot passe par la commande conjointe de ses deux roues motrices (indépendantes l’une de l’autre). En envoyant une tension en entrée des moteurs, on a en sortie les vitesses de rotation des roues desquelles sont issues les vitesses ![](readme/expressions_vitesses.png).
+Ce qui donne dans une première approximation :
+
+![](readme/modele_matlab.png)
+
+Bloc ‘Cinématique’ (permet d’extraire la vitesse et la rotation du robot) :
+
+![](readme/bloc_cinematique.png)
+
+Bloc ‘Conversion’ (pour récupérer les vitesses selon (x,y)) :
+
+![](readme/bloc_conversion.png)
+
 
 ## **Suivi de lignes**
 
