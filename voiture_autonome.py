@@ -8,9 +8,12 @@ import numpy as np
 import socket
 import struct
 import pickle
+import matplotlib.pyplot as plt
+
+
 
 from detected_objects import DetectedObject
-import Suiveur_de_ligne
+from Suiveur_de_ligne import detect_edges, display_heading_line, display_lines, region_of_interest, detect_line_segments, make_points, average_slope_intercept, detect_lane, display_lines, compute_steering_angle, display_heading_line, stabilize_steering_angle, steering_angle
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -131,12 +134,19 @@ class VoitureAutonome :
             ret, frame = self.videoStream.read()
 
             frame = cv2.rotate(frame, cv2.ROTATE_180)
+
+            lane_lines = detect_lane(frame)
+            steering_angle = compute_steering_angle(frame, lane_lines)
+            heading_image = display_heading_line(frame, steering_angle)
+
+            logging.info("Angle : %i",steering_angle)
             
             boxes, classes, scores = self.invokeModelOnFrame(frame)
 
             frame = self.processObjectDetectionOnFrame(frame, boxes, classes, scores)
 
             self.nextStepConduite()
+
 
 
             if self.__SHOW_VIDEO:
@@ -150,4 +160,4 @@ class VoitureAutonome :
 
                 if cv2.waitKey(1) == ord('q'):
                     break """
-            self.afficherInfosVoiture()
+            #self.afficherInfosVoiture()
