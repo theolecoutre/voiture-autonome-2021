@@ -135,25 +135,22 @@ Dans cette image, les fleches rouges sont des connections TCP AF_INET. Les noirs
 On envoie des consignes de vitesse et d'angle pour le systéme de controle d'Arduino.
 
 
+
 ## **Commande du Robot Mobile**
 
 **I/ Présentation de la maquette**
 
 Robot mobile de type unicycle adapté. La maquette comporte deux roues motrices indépendantes entraînant deux chenilles et se déplace sur un plan en deux dimensions. Elle est équipée de deux moteurs Makeblock avec encodeurs.
 
-
+![](readme/Schéma Robot.png)
 
 **Paramètres géométriques :**
 
-
-
-
+![](readme/Paramètres géométriques.png)
 
 **Paramètres des moteurs :**
 
-
-
-
+![](readme/Paramètres des moteurs.png)
 
 **II/ Présentation du problème**
 
@@ -168,8 +165,7 @@ L’objectif est de faire se déplacer la maquette en autonomie sur un circuit c
 
 **III/ Modèle cinématique**
 
-
-
+![](readme/Paramétrage cinématique maquette STA.png)
 
 **Paramétrage du robot :**
 * θ est l’orientation du robot dans le plan de référence
@@ -177,21 +173,21 @@ L’objectif est de faire se déplacer la maquette en autonomie sur un circuit c
 
 Pour le robot de type unicycle, on a le modèle cinématique suivant :
 
+![](readme/équations cinématiques.png)
 
+![](readme/Paramètres robot.png)
 
-
-
-
-On a en particulier : 
+On a en particulier : ![](readme/expressions vitesses.png)
 
 On peut alors écrire :
 
-
+![](readme/équations cinématiques 2.png)
 
 **IV/ Modèle dynamique du robot**
 
 On peut écrire les équations du moteur électrique :
 
+![](readme/équations dynamiques.png)
 
 où : J est le moment d’inertie, Cr le couple résistant, f le coefficient de frottement fluide, i le courant traversant le moteur, m la vitesse de rotation du rotor, u la tension en entrée et (L,R,k) différents paramètres du moteur.
 
@@ -199,11 +195,13 @@ On cherche alors à écrire le modèle dynamique du moteur sous la forme : X’=
 
 On pose y = m  ,  X = (m ; i)  et  U = (Cr  ; u). On trouve dans ce cas :
 
+![](readme/Matrices.png)
 
 **V/ Loi de commande et simulation (sur Matlab)**
 
 La commande du robot s'appuie essentiellement sur deux fonctions élémentaires exploitant les consignes reçues depuis le RaspberryPi : la vitesse et un angle.
 
+![](readme/Fonctions élémentaires.png)
 
 Remarques : 
 * Prendre un virage s’obtient en additionnant les effets de ces deux fonctions. Pour un virage à gauche par exemple, on peut écrire : Vg=Vav-Vrot et  Vd=Vav+Vrot où Vav est la vitesse imposée par la fonction Avancer et Vrot>0 la composante d’entrée en rotation imposée par la fonction Rotation.
