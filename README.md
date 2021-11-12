@@ -17,7 +17,7 @@ Projet de voiture autonome - Centrale Lille - 2021
  
  **Noé Pigret :** automatique
  
- **Sun Yishan :** communication, reception des coordonées du systéme Marvelmind
+ **Sun Yishan :** communication,socket send et recieve commands entre ordi|voiture, reception des coordonées du systéme Marvelmind
  
 
 ## **Reconnaissance d'objets**
