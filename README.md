@@ -17,7 +17,7 @@ Projet de voiture autonome - Centrale Lille - 2021
  
  **Noé Pigret :** automatique
  
- **Sun Yishan :** communication,socket send et recieve commands entre ordi|voiture, reception des coordonées du systéme Marvelmind
+ **Yishan Sun :** communication,socket send et recieve commands entre ordi|voiture, reception des coordonées du systéme Marvelmind
  
 
 ## **Reconnaissance d'objets**
@@ -116,18 +116,20 @@ Ainsi à partir de ces 3 variables, la maquette pourra connaître, à chaque ima
 Dans cette image, les fleches rouges sont des connections TCP AF_INET. Les noirs entre dispositifs sont des connections seriales et les autres sont des communications sockets AF_UNIX.
 
 ### **Côte Serveur**
-
+![](readme/Schéma\ interface graphique.png)
 
 * **Dossier communication/serveur**:
-  * **receiveLocation.c** : Écoutes les données de cordonnées de la voiture par sockets (client TCP). Interface CLI.
-  * **sendCommands.c** : Envoie à la voiture des commands comme nouvelle cordonné de destination ou d'arreter, par example (serveur TCP). Interface CLI.
+  * **receiveLocation.c** : Écoutes les données de coordonnées de la voiture par sockets (client TCP). Interface CLI.
+  * **sendCommands.c** : Change les coordonnées de la destination et les envoie à la voiture. L'utilisateur peut aussi demander la voiture à arreter et démarrer, par example (serveur TCP). Interface CLI. 
 * **video_client.py** : Video client TCP pour recevoir le stream de video live.
+* 
+![](readme/Schéma\ commands.png)
 
 ### **Côte Voiture**
 
 * **Dossier communication/raspberry**:
   * **receiveCommands.c** : Écoutes les commands du serveur par sockets (client TCP).
-  * **sendLocation.c** : Fait la lecture serial des données du Hedgehog Marvelmind, les envoie par sockets AF_INET au serveur et au **serial_communicator.py** par sockets AF_UNIX
+  * **sendLocation.c** :  Récupère les coorndonnées de la voiture grâce à un hedgehog de Marvelmind. Fait la lecture serial des données du Hedgehog Marvelmind, les envoie par sockets(serveur TCP) AF_INET au serveur et au **serial_communicator.py** par sockets AF_UNIX
 
 **server_communication.py** : Une class python qui est le serveur AF_UNIX autant que interface pour recuperer les données du programme C dans le programme princpal.
 
