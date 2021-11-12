@@ -116,14 +116,12 @@ Ainsi à partir de ces 3 variables, la maquette pourra connaître, à chaque ima
 Dans cette image, les fleches rouges sont des connections TCP AF_INET. Les noirs entre dispositifs sont des connections seriales et les autres sont des communications sockets AF_UNIX.
 
 ### **Côte Serveur**
-![](readme/Schéma\ interface graphique.png)
+![](readme/interface graphique.png "interface graphique de serveur")
 
 * **Dossier communication/serveur**:
   * **receiveLocation.c** : Écoutes les données de coordonnées de la voiture par sockets (client TCP). Interface CLI.
   * **sendCommands.c** : Change les coordonnées de la destination et les envoie à la voiture. L'utilisateur peut aussi demander la voiture à arreter et démarrer, par example (serveur TCP). Interface CLI. 
 * **video_client.py** : Video client TCP pour recevoir le stream de video live.
-* 
-![](readme/Schéma\ commands.png)
 
 ### **Côte Voiture**
 
@@ -136,7 +134,7 @@ Dans cette image, les fleches rouges sont des connections TCP AF_INET. Les noirs
 **serial_communicator.py** : Une class interface entre le raspberryPi et l'Arduino. Par le dispositif "/dev/ttyS0" (arduino) on envoie et reçoit des messages. Pour la partie d'Arduino, on a besoin de fixer une charactere qui indique le debut de la message qu'on souhaite envoyer. Cela se passe parce que si on simplement ecoute la porte dans le côté Arduino, il y a beaucoup d'autres communications aleatoires que se passent par la.
 On envoie des consignes de vitesse et d'angle pour le systéme de controle d'Arduino.
 
-
+![](readme/commands.png)
 
 ## **Commande du Robot Mobile**
 
