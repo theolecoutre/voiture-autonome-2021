@@ -14,12 +14,12 @@
 #include "../auxiliarFunctions.h"
 
 #define ERROR               -1
-#define REMOTE_PORT         3000
+#define REMOTE_PORT         4000
 #define REMOTE_IP           "127.0.0.1"
 #define MAX_BUFFER_LENGTH   80
 
-void sendStartVoiture();
-void sendStopVoiture();
-void sendCoordinates();
+char* sendStartVoiture(char *buffer);
+char* sendStopVoiture(char *buffer);
+char* sendCoordinates(char *buffer);
 
 #endif

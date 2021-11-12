@@ -1,4 +1,4 @@
-all: receiveLocation
+all: receiveLocation sendCommands
 
 receiveLocation:
 	gcc -g -pthread -c receiveLocation.c -o receiveLocation.o

@@ -1,5 +1,5 @@
 #include "receiveCommands.h"
-
+#include "../auxiliarFunctions.c"
 void receiveCoordinates()
 {
 
@@ -36,9 +36,16 @@ int main ()
     check_error("Accept Error\n", sockServer = accept(sock, (struct sockaddr *) &adrServer,  &length), ERROR);
 
     /*reading the desired command from the server*/
-    bzero(buffer, sizeof(buffer));
-    read(sock, buffer, sizeof(buffer));
 
+    for (;;)
+    {
+        bzero(buffer, sizeof(buffer));
+        read(sockServer, buffer, sizeof(buffer));
+        printf ("Commands: %s\n", buffer);
+        sleep(0.1);
+    }
+
+    /*
     choice = (int) strtol(buffer, &errorStr, 10);
     
     switch(choice)
@@ -55,6 +62,6 @@ int main ()
             break;
 
     }
-
+    */
     return 0;
 }

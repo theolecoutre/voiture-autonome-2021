@@ -3,6 +3,7 @@
         "time.h": "c",
         "auxiliarfunctions.h": "c",
         "inet.h": "c",
-        "receivelocation.h": "c"
+        "receivelocation.h": "c",
+        "sendcommands.h": "c"
     }
 }
