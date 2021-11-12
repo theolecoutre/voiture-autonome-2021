@@ -22,7 +22,7 @@
 
 #define ERROR               -1
 #define REMOTE_PORT         3000
-#define REMOTE_IP           "127.0.0.1"
+#define REMOTE_IP           "10.3.141.134"
 #define MAX_BUFFER_LENGTH   80
 
 #define PYTHON_PORT         2300

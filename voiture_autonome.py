@@ -48,7 +48,7 @@ class VoitureAutonome :
         self.inputDetails = self.interpreter.get_input_details()
         self.outputDetails = self.interpreter.get_output_details()
         
-        self.videoStream = cv2.VideoCapture(0)
+        self.videoStream = cv2.VideoCapture(-1)
         self.videoWidth = int(self.videoStream.get(3))
         self.videoHeight = int(self.videoStream.get(4))
 

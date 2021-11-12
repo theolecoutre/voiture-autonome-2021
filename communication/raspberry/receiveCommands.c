@@ -28,6 +28,7 @@ int main ()
     adrRBPI.sin_port        = htons(LOCAL_PORT);
     adrRBPI.sin_addr.s_addr = inet_addr(LOCAL_IP); 
 
+    
     check_error("Bind Error\n", bind(sock, (const struct sockaddr *) &adrRBPI, sizeof(adrRBPI)), ERROR);
 
     check_error("Listen Error\n", listen(sock, MAX_CONN), ERROR);
