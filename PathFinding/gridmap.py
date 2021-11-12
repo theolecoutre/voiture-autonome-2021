@@ -195,7 +195,7 @@ class OccupancyGridMap:
         plt.draw()
 
     @staticmethod
-    def from_png(filename, cell_size):
+    def from_png(filename, cell_size, dilatation_iterations = 10):
         """
         Create an OccupancyGridMap from a png image
         :param filename: the image filename
@@ -205,7 +205,7 @@ class OccupancyGridMap:
         ogm_data = png_to_ogm(filename, normalized=True)
         ogm_data_arr = numpy.array(ogm_data)
 
-        ogm_data_arr_dilated = dilater_bordure(ogm_data_arr)
+        ogm_data_arr_dilated = dilater_bordure(ogm_data_arr, iterations=dilatation_iterations)
         # plt.imshow(ogm_data_arr_dilated, interpolation='nearest')
         # plt.show()
 
