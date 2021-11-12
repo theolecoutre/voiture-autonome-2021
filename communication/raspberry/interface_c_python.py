@@ -25,6 +25,18 @@ class SocketServer:
         logging.info("Serveur local à l'écoute...")
 
         self.connection, self.client_address = self.sock.accept()
+        
+        while(1):
+            try:
+                data = self.connection.recv(250)
+                if data:
+                    print(f'Reçu : {data}')
+                    location_in = Location.from_buffer_copy(data)
+                    logging.debug(f"Received: address:{location_in.address}, x:{location_in.x}, y:{location_in.y}, z:{location_in.z}, angle:{location_in.angle}, time:{location_in.time}\n")
+            except Exception as e:
+                logging.debug (f"Exception {e}")
+
+            
 
     def receiveLocation(self):
         try:

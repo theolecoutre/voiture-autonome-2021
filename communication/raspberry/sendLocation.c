@@ -7,7 +7,7 @@
 
 #include "sendLocation.h"
 
-#define SERVER_PATH "../testdesocketici"
+#define SERVER_PATH "testdesocketici"
 #define BUFFER_LENGTH 250
 #define FALSE 0
 
@@ -115,7 +115,7 @@ int main (int argc, char *argv[])
 	sem = sem_open(DATA_INPUT_SEMAPHORE, O_CREAT, 0777, 0);
 
     // TCP
-    // sock = establishConnectionServer();
+    sock = establishConnectionServer();
     sockPython = establishConnectionPythonServer();
 
     // Main loop
