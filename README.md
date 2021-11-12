@@ -142,15 +142,15 @@ On envoie des consignes de vitesse et d'angle pour le systéme de controle d'Ard
 
 Robot mobile de type unicycle adapté. La maquette comporte deux roues motrices indépendantes entraînant deux chenilles et se déplace sur un plan en deux dimensions. Elle est équipée de deux moteurs Makeblock avec encodeurs.
 
-![](readme/Schéma Robot.png)
+![](readme/Schéma\ Robot.png)
 
 **Paramètres géométriques :**
 
-![](readme/Paramètres géométriques.png)
+![](readme/Paramètres\ géométriques.png)
 
 **Paramètres des moteurs :**
 
-![](readme/Paramètres des moteurs.png)
+![](readme/Paramètres\ des\ moteurs.png)
 
 **II/ Présentation du problème**
 
