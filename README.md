@@ -134,7 +134,7 @@ Dans cette image, les fleches rouges sont des connections TCP AF_INET. Les noirs
 **serial_communicator.py** : Une class interface entre le raspberryPi et l'Arduino. Par le dispositif "/dev/ttyS0" (arduino) on envoie et reçoit des messages. Pour la partie d'Arduino, on a besoin de fixer une charactere qui indique le debut de la message qu'on souhaite envoyer. Cela se passe parce que si on simplement ecoute la porte dans le côté Arduino, il y a beaucoup d'autres communications aleatoires que se passent par la.
 On envoie des consignes de vitesse et d'angle pour le systéme de controle d'Arduino.
 
-![](readme/interface graphique.png)
+![](readme/Interfacegraphique.png)
 
 ![](readme/commands.png)
 
