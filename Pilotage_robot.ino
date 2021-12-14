@@ -5,6 +5,7 @@
 #define DEFSPEED 20
 #define SPD_TO_VOLT 5.0/40.0
 #define COEFF_ROT 0.48 //On définit un coefficient traduisant le glissement des chenilles sur le sol (pertes) pendant que le robot pivote (estimé expérimentalement comme le rapport entre la rotation théorique et la rotation réelle observée)
+#define PREC_ANG 2
 
 //#define DW 1.18   //vitesse de rotation fixée du robot : w = (2a/l)DW = 2pi/3 rad/s => DW = 1.18 rad/s
 //#define UA_TO_MPS 0.27/50.0  //quotient permettant de calculer la vitesse en m/s du robot à partir de la vitesse en unité arbitraire : on a pour DEFSPEED = 50, Vitesse = 0.27 m/s (à partir de mesures)
@@ -40,6 +41,7 @@ void ISR_encoder1();
 void ISR_encoder2();
 void WaitNextPeriod();
 dat GetData(); //Fonction de récupération des données fournies par le RasberryPi
+void Evoluer(float vitesse, float angle);
 void Avancer(float vitesse); //vitesse en unités arbitraires
 void Pivoter(float angle); //angle en degrés
 
@@ -67,8 +69,9 @@ void loop() {
   Serial.println(vitesse);
   //vitesse=20;
   //angle=45;
-  Avancer(vitesse);
+  //Avancer(vitesse);
   //Pivoter(angle);
+  Evoluer(vitesse,angle);
 }
 
 
@@ -80,6 +83,21 @@ void WaitNextPeriod() {
   if(timeToWait>0)
     delay(timeToWait);
   LastMillis=millis();
+}
+
+
+void Evoluer(float vitesse, float angle) {
+  float omeg=0;
+  float vitG=(vitesse+(angle*DEFSPEED-abs(angle)*vitesse)/180);
+  float vitD=(vitesse-(angle*DEFSPEED+abs(angle)*vitesse)/180);
+  while (abs(omeg-angle)>PREC_ANG) {
+      VoltMotors(vitG*SPD_TO_VOLT,vitD*SPD_TO_VOLT);
+      //Serial.println(omeg); //on affiche l'angle de rotation
+      delay(10); 
+      omeg=COEFF_ROT*(position1+position2)*TICK_TO_DEG*a/l;
+    }
+  position1 = 0;
+  position2 = 0;
 }
 
 
