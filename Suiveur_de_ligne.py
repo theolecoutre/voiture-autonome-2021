@@ -8,7 +8,7 @@ Created on Wed Nov  3 17:40:30 2021
 
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import logging
 import math
 
@@ -24,7 +24,7 @@ def detect_edges(frame): # Créé une nouvelle image avec les bordure des objets
 
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV) # On transforme le format BRG en HSV pour éviter les différentes teintes de bleu due à la luminosité
     #affiche_image(hsv) # On affiche la nouvelle image
-    plt.imshow(hsv) # On affiche la nouvelle image
+    #plt.imshow(hsv) # On affiche la nouvelle image
     
     lower_blue = np.array([60, 40, 40]) # Bleu clair
     upper_blue = np.array([150, 255, 255]) # Bleu foncé
@@ -260,7 +260,7 @@ def test_photo(file):
     steering_angle = compute_steering_angle(frame, lane_lines)
     print(steering_angle)
     heading_image = display_heading_line(frame, steering_angle)
-    plt.imshow(heading_image) # On affiche la nouvelle image
+    #plt.imshow(heading_image) # On affiche la nouvelle image
     
     return steering_angle
 
