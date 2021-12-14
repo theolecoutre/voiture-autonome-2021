@@ -94,6 +94,18 @@ void Avancer(float vitesse) {
 }
 
 
+void Avancer_pivoter(float vitesse) {
+ VoltMotors(vitesse*SPD_TO_VOLT,vitesse*SPD_TO_VOLT);
+ if (angle>90){
+ VoltMotors((vitesse+10)*SPD_TO_VOLT,(vitesse-10)*SPD_TO_VOLT);
+ }else{
+ VoltMotors((vitesse-10)*SPD_TO_VOLT,vitesse(vitesse+10)*SPD_TO_VOLT);
+ }
+  position1 = 0;
+  position2 = 0;
+}
+
+
 void Pivoter(float angle) {
   float omeg=0;
   if (abs(angle)+angle == 0) {
