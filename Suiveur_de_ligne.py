@@ -169,7 +169,7 @@ def compute_steering_angle(frame, lane_lines):
     """
     if len(lane_lines) == 0: # Si on ne voit pas de ligne on ne fait rien
         logging.info('Aucune ligne de couloir détectée, ne rien faire')
-        return -90
+        return 90
 
     height, width, _ = frame.shape
     if len(lane_lines) == 1: # Si on voit une ligne, on suit sa direction
