@@ -1,6 +1,6 @@
 import socket
 import logging
-
+import os
 from ctypes import *
 
 class Coordinate(Structure):
@@ -15,6 +15,8 @@ class SocketCommands:
     serverAddress = "socketCommands"
 
     def __init__(self):
+        if os.path.exists("socketCommands"):
+            os.remove("socketCommands")
         self.newCoord = None
         self.command = " "
         self.sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)

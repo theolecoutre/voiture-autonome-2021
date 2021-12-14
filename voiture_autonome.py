@@ -10,11 +10,17 @@ import struct
 import pickle
 from numpy import dot
 
+import threading
+
 from detected_objects import DetectedObject
 import serial_communicator
-from communication.interface_c_python_location import SocketLocation
+
+from communication.raspberry.interface_c_python_commands import SocketCommands
+from communication.raspberry.interface_c_python_location import SocketLocation
+
 
 logging.basicConfig(level=logging.DEBUG)
+
 
 class VoitureAutonome :
 
@@ -25,8 +31,23 @@ class VoitureAutonome :
         self.direction = 90 #on initialise l'angle de braquage à 90, le point milieu
         self.attente = False #variable indiquant si la voiture est en attente (v=0 en attendant)
         self.attenteStart = 0 #le timestamp auquel l'attente a débuté
-        self.infosC = SocketLocation() #receive location and other commands from C programs.
+        
+        self.serial_communicator = serial_communicator.SerialCommunicator()
 
+
+        self.interfaceLocation = SocketLocation()
+        self.interfaceCommands = SocketCommands()
+        self.lancerCommunicationC()
+
+
+    def lancerCommunicationC(self):
+        t1 = threading.Thread(target=self.interfaceLocation.run)
+        t2 = threading.Thread(target=self.interfaceCommands.run)
+
+        t1.start()
+        t2.start()
+
+        
     def initVideoServer(self): #démarre la socket vidéo et attend qu'un client se connecte
         server_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         socket_address = (config.SERVER_IP,config.SERVER_PORT)
@@ -112,10 +133,14 @@ class VoitureAutonome :
     def setVitesse(self, vitesse : int):
         if vitesse >= 0: #on vérifie que la vitesse est positive
             if vitesse != self.vitesse: #on vérifie que la vitesse n'est as déjà celle programmée
-                self.vitessePrecedente = self.vitesse #on enregistre la vitesse précédente en cas de fin de limitation future
+                if (self.vitesse != 0):
+                    self.vitessePrecedente = self.vitesse #on enregistre la vitesse précédente en cas de fin de limitation future
                 self.vitesse = vitesse #
 
     def nextStepConduite(self):
+        if (self.interfaceCommands.command[0] == '0'):
+                self.interfaceCommands.command = " "
+                self.setVitesse(0)
         if self.attente :
             self.setVitesse(0)
             if (time.time() - self.attenteStart > 3): #si l'attente a démarré il y a plus de 3 secondes
@@ -124,13 +149,12 @@ class VoitureAutonome :
         return
 
     def sendInfosToArduino(self):
-        self.serial_communicator = serial_communicator.SerialCommunicator()
         msg = '{:0>2}{:0>3}'.format(self.vitesse, self.direction)
         self.serial_communicator.sendMessage(msg)
 
     def calculatePossibleDirs(self, pannel):
         #to do. 
-        location = self.infosC.receiveLocation()
+        location = self.interfaceLocation.location
         possible_dirs = None
         if (pannel == "ALL"):
           possible_dirs.append([self.direction]) 
@@ -181,6 +205,8 @@ class VoitureAutonome :
             frame = self.processObjectDetectionOnFrame(frame, boxes, classes, scores)
 
             self.nextStepConduite()
+            self.sendInfosToArduino()
+            
 
 
             if self.__SHOW_VIDEO:

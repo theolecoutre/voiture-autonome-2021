@@ -1,6 +1,6 @@
 import socket
 import logging
-
+import os
 from ctypes import *
 
 class Location(Structure):
@@ -20,6 +20,9 @@ class SocketLocation:
     serverAddress = "socketLocation"
 
     def __init__(self):
+        if os.path.exists("socketLocation"):
+            os.remove("socketLocation")
+
         self.location = None
         self.sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         self.sock.bind(self.serverAddress)
