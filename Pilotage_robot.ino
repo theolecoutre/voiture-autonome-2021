@@ -94,7 +94,7 @@ void Avancer(float vitesse) {
 }
 
 
-void Avancer_pivoter(float vitesse) {
+void Avancer_pivoter(float vitesse,float angle) {
  VoltMotors(vitesse*SPD_TO_VOLT,vitesse*SPD_TO_VOLT);
  if (angle>90){
  VoltMotors((vitesse+10)*SPD_TO_VOLT,(vitesse-10)*SPD_TO_VOLT);
