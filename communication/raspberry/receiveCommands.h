@@ -19,6 +19,12 @@
 #define MAX_BUFFER_LENGTH   80
 #define MAX_CONN            1
 
+typedef struct 
+{
+    int x, y, z;
+
+}coordinates;
+
 void receiveCoordinates();
 void receiveStopVoiture();
 

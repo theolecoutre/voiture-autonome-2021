@@ -7,7 +7,9 @@ sendLocation:
 	gcc -o sendLocation sendLocation.o marvelmind.o auxiliarFunctions.o -pthread
 
 receiveCommands:
-	gcc -c receiveCommands.c -o receiveCommands -lpthread
+	gcc -g -pthread -c receiveCommands.c -o receiveCommands.o
+	gcc -g -pthread -c ../auxiliarFunctions.c -o auxiliarFunctions.o
+	gcc -o receiveCommands receiveCommands.o auxiliarFunctions.o -lpthread
 
 clean:
 	rm -rf *.o sendLocation receiveCommands

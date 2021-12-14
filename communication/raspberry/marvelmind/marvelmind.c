@@ -199,9 +199,7 @@ int OpenSerialPort_ (const char * portFileName, uint32_t baudrate, bool verbose)
     ttyCtrl.c_cc[VTIME]     =   30; // 3 seconds read timeout
     ttyCtrl.c_cflag     |=  CREAD | CLOCAL; // turn on READ & ignore ctrl lines
     ttyCtrl.c_iflag     &=  ~(IXON | IXOFF | IXANY);// turn off s/w flow ctrl
-    ttyCtrl.c_iflag     &=  ~(BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL);
     ttyCtrl.c_lflag     &=  ~(ICANON | ECHO | ECHOE | ISIG); // make raw
-    ttyCtrl.c_lflag     &= (ECHONL | IEXTEN);  
     ttyCtrl.c_oflag     &=  ~OPOST; // make raw
     tcflush(ttyHandle, TCIFLUSH ); // Flush port
     if (tcsetattr (ttyHandle, TCSANOW, &ttyCtrl) != 0)
@@ -931,10 +929,9 @@ bool getPositionFromMarvelmindHedge (struct MarvelmindHedge * hedge,
 // onlyNew: print only new positions
 //////////////////////////////////////////////////////////////////////////////
 void printPositionFromMarvelmindHedge (struct MarvelmindHedge * hedge,
-    bool onlyNew, int *addressHedge, float *x, float *y, float *z, float *angle, uint32_t *time)
-{
-    uint8_t i,j;
-    double xm,ym,zm;
+    bool onlyNew)
+{uint8_t i,j;
+ double xm,ym,zm;
 
     if (hedge->haveNewValues_ || (!onlyNew))
     {
@@ -975,15 +972,6 @@ void printPositionFromMarvelmindHedge (struct MarvelmindHedge * hedge,
                             position.address, xm, ym, zm, position.angle, position.timestamp);
                 }
             }
-
-            *addressHedge = (int) position.address;
-            *x = xm;
-            *y = ym;
-            *z = zm;
-            *angle = position.angle;
-            *time = position.timestamp;
-
-
             hedge->haveNewValues_=false;
         }
     }

@@ -179,7 +179,7 @@ void destroyMarvelmindHedge (struct MarvelmindHedge * hedge);
 void startMarvelmindHedge (struct MarvelmindHedge * hedge);
 
 void printPositionFromMarvelmindHedge (struct MarvelmindHedge * hedge,
-    bool onlyNew, int *address, float *x, float *y, float *z, float *angle, uint32_t *time);
+                                       bool onlyNew);
 bool getPositionFromMarvelmindHedge (struct MarvelmindHedge * hedge,
                                      struct PositionValue * position);
 

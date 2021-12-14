@@ -12,7 +12,7 @@ from numpy import dot
 
 from detected_objects import DetectedObject
 import serial_communicator
-from communication.interface_c_python import SocketServer
+from communication.interface_c_python_location import SocketLocation
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -25,7 +25,7 @@ class VoitureAutonome :
         self.direction = 90 #on initialise l'angle de braquage à 90, le point milieu
         self.attente = False #variable indiquant si la voiture est en attente (v=0 en attendant)
         self.attenteStart = 0 #le timestamp auquel l'attente a débuté
-        self.infosC = SocketServer() #receive location and other commands from C programs.
+        self.infosC = SocketLocation() #receive location and other commands from C programs.
 
     def initVideoServer(self): #démarre la socket vidéo et attend qu'un client se connecte
         server_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
