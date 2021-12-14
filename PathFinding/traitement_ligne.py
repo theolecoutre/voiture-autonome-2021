@@ -1,7 +1,7 @@
 import cv2
 
 # permet de trouver le point d'arrivée sur l'image masque
-def getArrivalPoint(gmap, ligne_largeur_max = 150, pas = 5, hauteur = 400):
+def getPointMilieu(gmap, ligne_largeur_max = 150, pas = 5, hauteur = 400, recursive = False):
     # si la hauteur est négative, cela signifie qu'on a pas pu trouver le point voulu
     assert(hauteur > 0)
 
@@ -23,7 +23,10 @@ def getArrivalPoint(gmap, ligne_largeur_max = 150, pas = 5, hauteur = 400):
             x += pas
 
     # on a pas trouvé le points, on diminue la hauteur
-    return getArrivalPoint(gmap, ligne_largeur_max, pas, hauteur - 50)
+    if not recursive:
+        raise Exception('Point non trouvé!')
+
+    return getPointMilieu(gmap, ligne_largeur_max, pas, hauteur - 50, True)
 
 
 # permet de rendre les traits plus épais pour éviter de passer à côté
