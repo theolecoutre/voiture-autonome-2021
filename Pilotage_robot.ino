@@ -2,7 +2,7 @@
 
 #define DT 5 //période d'échantillonnage
 
-#define DEFSPEED 20
+#define DEFSPEED 30
 #define SPD_TO_VOLT 5.0/40.0
 #define COEFF_ROT 0.48 //On définit un coefficient traduisant le glissement des chenilles sur le sol (pertes) pendant que le robot pivote (estimé expérimentalement comme le rapport entre la rotation théorique et la rotation réelle observée)
 #define PREC_ANG 2
@@ -41,9 +41,10 @@ void ISR_encoder1();
 void ISR_encoder2();
 void WaitNextPeriod();
 dat GetData(); //Fonction de récupération des données fournies par le RasberryPi
-void Evoluer(float vitesse, float angle);
 void Avancer(float vitesse); //vitesse en unités arbitraires
 void Pivoter(float angle); //angle en degrés
+void Evoluer(float vitesse, float angle);
+void Avancer_pivoter(float vitesse,float angle);
 
 //SETUP>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -61,17 +62,13 @@ void setup() {
 //LOOP>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 void loop() {
-  WaitNextPeriod();
+  //WaitNextPeriod();
   dat data=GetData();
   // mode=data.mod;
   vitesse=data.vit;
   angle=data.ang;
-  Serial.println(vitesse);
-  //vitesse=20;
-  //angle=45;
-  //Avancer(vitesse);
-  //Pivoter(angle);
-  Evoluer(vitesse,angle);
+  Avancer(vitesse);
+  Pivoter(angle);
 }
 
 
@@ -86,14 +83,36 @@ void WaitNextPeriod() {
 }
 
 
-void Evoluer(float vitesse, float angle) {
+void Avancer(float vitesse) {
+  VoltMotors(vitesse*SPD_TO_VOLT,vitesse*SPD_TO_VOLT);
+  delay(100);
+  position1 = 0;
+  position2 = 0;
+}
+
+
+void Pivoter(float angle) {
   float omeg=0;
+  while (abs(omeg-angle)>PREC_ANG) {
+    float eps=(omeg-angle)/abs(omeg-angle);
+    VoltMotors(-eps*DEFSPEED*SPD_TO_VOLT,eps*DEFSPEED*SPD_TO_VOLT);
+    Serial.println(abs(omeg-angle)); //on affiche l'angle de rotation
+    delay(10);
+    omeg=COEFF_ROT*(position1+position2)*TICK_TO_DEG*a/l;
+  }
+  position1 = 0;
+  position2 = 0;
+}
+
+
+void Evoluer(float vitesse, float angle) {
+  float omeg=0.0;
   float vitG=(vitesse+(angle*DEFSPEED-abs(angle)*vitesse)/180);
   float vitD=(vitesse-(angle*DEFSPEED+abs(angle)*vitesse)/180);
   while (abs(omeg-angle)>PREC_ANG) {
       VoltMotors(vitG*SPD_TO_VOLT,vitD*SPD_TO_VOLT);
-      //Serial.println(omeg); //on affiche l'angle de rotation
-      delay(10); 
+      Serial.println(abs(omeg-angle)); //on affiche l'angle de rotation
+      delay(10);
       omeg=COEFF_ROT*(position1+position2)*TICK_TO_DEG*a/l;
     }
   position1 = 0;
@@ -101,30 +120,7 @@ void Evoluer(float vitesse, float angle) {
 }
 
 
-void Avancer(float vitesse) {
-  if (abs(vitesse)+vitesse == 0) {
-    VoltMotors(-vitesse*SPD_TO_VOLT,-vitesse*SPD_TO_VOLT);
-  } else {
-    VoltMotors(vitesse*SPD_TO_VOLT,vitesse*SPD_TO_VOLT);
-  }
-  position1 = 0;
-  position2 = 0;
-}
-
-
-void Avancer_pivoter(float vitesse,float angle) {
- VoltMotors(vitesse*SPD_TO_VOLT,vitesse*SPD_TO_VOLT);
- if (angle>90){
- VoltMotors((vitesse+10)*SPD_TO_VOLT,(vitesse-10)*SPD_TO_VOLT);
- }else{
- VoltMotors((vitesse-10)*SPD_TO_VOLT,vitesse(vitesse+10)*SPD_TO_VOLT);
- }
-  position1 = 0;
-  position2 = 0;
-}
-
-
-void Pivoter(float angle) {
+/*void Pivoter(float angle) {
   float omeg=0;
   if (abs(angle)+angle == 0) {
     while (omeg-angle>0) {
@@ -141,6 +137,18 @@ void Pivoter(float angle) {
       omeg=COEFF_ROT*(position1+position2)*TICK_TO_DEG*a/l;
     }
   }
+  position1 = 0;
+  position2 = 0;
+}*/
+
+
+void Avancer_pivoter(float vitesse,float angle) {
+ VoltMotors(vitesse*SPD_TO_VOLT,vitesse*SPD_TO_VOLT);
+ if (angle>90){
+ VoltMotors((vitesse+10)*SPD_TO_VOLT,(vitesse-10)*SPD_TO_VOLT);
+ }else{
+ VoltMotors((vitesse-10)*SPD_TO_VOLT,vitesse(vitesse+10)*SPD_TO_VOLT);
+ }
   position1 = 0;
   position2 = 0;
 }
